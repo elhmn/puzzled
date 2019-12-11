@@ -1,0 +1,12 @@
+#exec
+puzzled
+a.out
+
+#obj
+*.o
+
+#lib
+*.a
+
+#tmp
+.*.sw*
