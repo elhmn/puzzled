@@ -6,13 +6,13 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Wed Dec 11 16:04:10 2019                        by bmbarga      #
+#   Updated: Thu Dec 12 10:48:35 2019                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
 NAME = puzzled
 
-SRC =	main.c
+SRC =	main.c puzzled.c
 
 OBJ = $(SRC:.c=.o)
 
