@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Mon Dec 16 16:34:37 2019                        by bmbarga      */
+/*   Updated: Mon Dec 16 16:50:30 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ int test_puzzled(char *cword_file) {
 	}
 
 	printf("%s", cword);
+	free(cword);
 	return (0);
 }
