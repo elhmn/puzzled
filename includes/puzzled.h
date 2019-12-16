@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Mon Dec 16 16:41:16 2019                        by bmbarga      */
+/*   Updated: Mon Dec 16 20:49:09 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #define DICTIONNARY "/usr/share/dict/words"
 #define TESTDIR "./tests/"
+#define EMPTY '.'
 
 int		puzzled(int n, int m, char *file);
 char	*getfile(char *dict_file);
