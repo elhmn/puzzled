@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Sun Dec 15 13:50:56 2019                        by bmbarga      */
+/*   Updated: Mon Dec 16 16:41:16 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 # define PUZZLED_H
 
 #define DICTIONNARY "/usr/share/dict/words"
+#define TESTDIR "./tests/"
 
-int	puzzled(int n, int m, char *file);
+int		puzzled(int n, int m, char *file);
+char	*getfile(char *dict_file);
+int		test_puzzled(char *file);
 
 #endif

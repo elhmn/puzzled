@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*  puzzled.c                                                                 */
+/*  test_puzzled.c                                                            */
 /*                                                                            */
 /*   By: elhmn <www.elhmn.com>                                                */
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
-/*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Mon Dec 16 16:05:23 2019                        by bmbarga      */
+/*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
+/*   Updated: Mon Dec 16 16:34:37 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,14 @@
 #include <stdlib.h>
 #include "puzzled.h"
 
-int puzzled(int n, int m, char *dict_file) {
-	char *dict = NULL;
+int test_puzzled(char *cword_file) {
+	char *cword = NULL;
 
-	printf("puzzled is running with N = [%d] && M = [%d]\n", n, m); // Debug
-
-	if (!(dict = getfile(dict_file))) {
-		printf("Error: dict: set to NULL");
+	if (!(cword = getfile(cword_file))) {
+		printf("Error: cword: set to NULL");
 		return (-1);
 	}
 
+	printf("%s", cword);
 	return (0);
 }
