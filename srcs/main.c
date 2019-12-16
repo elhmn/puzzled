@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:03:10 2019                        by elhmn        */
-/*   Updated: Sun Dec 15 13:52:50 2019                        by bmbarga      */
+/*   Updated: Mon Dec 16 14:19:09 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "puzzled.h"
 
 int		main(int ac, char** av) {
-	char *file = DICTIONNARY;
+	char *dict_file = DICTIONNARY;
 	int c, n, m = 0;
 
 	//getopt does not display error in case of failure
@@ -27,7 +27,7 @@ int		main(int ac, char** av) {
 		if ((c = getopt(ac, av, "M:N:f:")) != -1) {
 			switch (c) {
 				case 'f' :
-					file = optarg;
+					dict_file = optarg;
 					break;
 				case 'N' :
 					n = atoi(optarg);
@@ -50,6 +50,6 @@ int		main(int ac, char** av) {
 		return (EXIT_FAILURE);
 	}
 
-	puzzled(n, m);
+	puzzled(n, m, dict_file);
 	return (EXIT_SUCCESS);
 }
