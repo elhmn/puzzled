@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 16:52:43 2019                        by bmbarga      */
+/*   Updated: Tue Dec 17 16:53:02 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,16 @@ int check_no_duplicated_row_words(char **map) {
 }
 
 //returns 0 or failing line in case of failure
+int check_no_duplicated_col_words(char **map) {
+	if (!map) {
+		return (0);
+	}
+
+	return (-1);
+}
+
+
+//returns 0 or failing line in case of failure
 int check_row_lenght_not_even(char **map) {
 	if (!map) {
 		return (0);
@@ -331,6 +341,9 @@ int test_puzzled(char *cword_file) {
 	}
 	else if ((row = check_no_duplicated_row_words(map)) >= 0) {
 		printf("failed: at row[%d]: no duplicated row words \n", row);
+	}
+	else if ((row = check_no_duplicated_col_words(map)) >= 0) {
+		printf("failed: at row[%d]: no duplicated col words \n", row);
 	}
 
 	free(cword);
