@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 16:39:02 2019                        by bmbarga      */
+/*   Updated: Tue Dec 17 16:52:43 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,9 +209,8 @@ int get_next_letter_in_row(char **map, int i, int j) {
 }
 
 //returns 0 or failing line in case of failure
-int check_no_duplicated_words(char **map) {
+int check_no_duplicated_row_words(char **map) {
 	char c1, c2;
-	// 	char c1;
 	int i, j;
 	int k, l;
 	int match;
@@ -222,17 +221,11 @@ int check_no_duplicated_words(char **map) {
 
 	i = -1;
 	while (map[++i] != NULL) {
-
 		k = i;
 		while (map[++k]) {
-
-			printf("(i:%d, j:%d):\n", i, 0); // Debug
-			printf("(k:%d, l:%d):\n", k, 0); // Debug
-
 			j = -1;
 			l = -1;
 			match = 1;
-
 			while ((c1 = map[i][++j]) != '\0') {
 				//found letter
 				if (c1 >= 'a' && c1 <= 'z') {
@@ -241,21 +234,17 @@ int check_no_duplicated_words(char **map) {
 						if ((c2 = map[k][l]) != -1) {
 							if (c2 == c1) {
 								match *= 1;
-								printf("ok-[%d]- ", match); // Debug
 							} else {
 								match *= 0;
-								printf("ko-[%d]- ", match); // Debug
 							}
-							printf("(%c, %c); ", c1, c2); // Debug
 							break;
 						}
 					}
-					printf(" -match-[%d]- ", match); // Debug
-					printf("\n"); // Debug
 				}
 			}
-			printf("----\n"); // Debug
-
+			if (match) {
+				return (i + 1);
+			}
 		}
 	}
 
@@ -340,8 +329,8 @@ int test_puzzled(char *cword_file) {
 	else if ((row = check_row_and_col_filled_at_50_per_cent(map)) >= 0) {
 		printf("failed: at row[%d]: each column and row must be filled more than 50 percent \n", row);
 	}
-	else if ((row = check_no_duplicated_words(map)) >= 0) {
-		printf("failed: at row[%d]: no duplicated words \n", row);
+	else if ((row = check_no_duplicated_row_words(map)) >= 0) {
+		printf("failed: at row[%d]: no duplicated row words \n", row);
 	}
 
 	free(cword);
