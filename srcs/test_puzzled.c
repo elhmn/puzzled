@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 10:57:36 2019                        by bmbarga      */
+/*   Updated: Tue Dec 17 16:39:02 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int check_at_least_one_blank(char **map) {
 //returns 0 or failing line in case of failure
 int check_row_and_col_filled_at_50_per_cent(char **map) {
 	char c;
-	int	 found;
+	int found;
 	int i, j;
 
 	if (!map) {
@@ -192,10 +192,71 @@ int check_row_and_col_filled_at_50_per_cent(char **map) {
 	return (-1);
 }
 
+//returns index of next letter in `i` row
+int get_next_letter_in_row(char **map, int i, int j) {
+	char c = '\0';
+
+	if (map && map[i]) {
+		while ((c = map[i][j])) {
+			if (c >= 'a' && c <= 'z') {
+				break;
+			}
+			j++;
+		}
+	}
+
+	return (j);
+}
+
 //returns 0 or failing line in case of failure
 int check_no_duplicated_words(char **map) {
+	char c1, c2;
+	// 	char c1;
+	int i, j;
+	int k, l;
+	int match;
+
 	if (!map) {
 		return (0);
+	}
+
+	i = -1;
+	while (map[++i] != NULL) {
+
+		k = i;
+		while (map[++k]) {
+
+			printf("(i:%d, j:%d):\n", i, 0); // Debug
+			printf("(k:%d, l:%d):\n", k, 0); // Debug
+
+			j = -1;
+			l = -1;
+			match = 1;
+
+			while ((c1 = map[i][++j]) != '\0') {
+				//found letter
+				if (c1 >= 'a' && c1 <= 'z') {
+					while (map[k][++l]) {
+						l = get_next_letter_in_row(map, k, l);
+						if ((c2 = map[k][l]) != -1) {
+							if (c2 == c1) {
+								match *= 1;
+								printf("ok-[%d]- ", match); // Debug
+							} else {
+								match *= 0;
+								printf("ko-[%d]- ", match); // Debug
+							}
+							printf("(%c, %c); ", c1, c2); // Debug
+							break;
+						}
+					}
+					printf(" -match-[%d]- ", match); // Debug
+					printf("\n"); // Debug
+				}
+			}
+			printf("----\n"); // Debug
+
+		}
 	}
 
 	return (-1);
