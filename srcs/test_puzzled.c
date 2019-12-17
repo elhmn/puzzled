@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 02:18:25 2019                        by bmbarga      */
+/*   Updated: Tue Dec 17 10:57:36 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void show_map(char** map) {
 	}
 }
 
+//returns 0 or failing line in case of failure
 int check_row_size(char **map) {
 	int len;
 	int prevlen;
@@ -75,13 +76,14 @@ int check_row_size(char **map) {
 	prevlen = len;
 	for (int i = 1; map[i] != NULL; i++) {
 		if (prevlen != (len = strlen(map[i]))) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
-	return (1);
+	return (-1);
 }
 
+//returns 0 or failing line in case of failure
 int check_wrong_character(char **map) {
 	char c;
 
@@ -92,15 +94,16 @@ int check_wrong_character(char **map) {
 	for (int i = 0; map[i] != NULL; i++) {
 		for (int j = 0; (c = map[i][j]) != '\0'; j++) {
 			if (!((c >= 'a' && c <= 'z') || c == EMPTY)) {
-				return (0);
+				return (i + 1);
 			}
 		}
 	}
 
-	return (1);
+	return (-1);
 }
 
 
+//returns 0 or failing line in case of failure
 int check_at_least_one_blank(char **map) {
 	char c;
 	int	 found;
@@ -121,7 +124,7 @@ int check_at_least_one_blank(char **map) {
 		}
 
 		if (!found) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
@@ -137,14 +140,15 @@ int check_at_least_one_blank(char **map) {
 		}
 
 		if (!found) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
-	return (1);
+	return (-1);
 }
 
 
+//returns 0 or failing line in case of failure
 int check_row_and_col_filled_at_50_per_cent(char **map) {
 	char c;
 	int	 found;
@@ -165,7 +169,7 @@ int check_row_and_col_filled_at_50_per_cent(char **map) {
 		}
 
 		if (found > j / 2) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
@@ -181,21 +185,23 @@ int check_row_and_col_filled_at_50_per_cent(char **map) {
 		}
 
 		if (found > i / 2) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
-	return (1);
+	return (-1);
 }
 
+//returns 0 or failing line in case of failure
 int check_no_duplicated_words(char **map) {
 	if (!map) {
 		return (0);
 	}
-	//TODO
-	return (1);
+
+	return (-1);
 }
 
+//returns 0 or failing line in case of failure
 int check_row_lenght_not_even(char **map) {
 	if (!map) {
 		return (0);
@@ -203,13 +209,14 @@ int check_row_lenght_not_even(char **map) {
 
 	for (int i = 0; map[i] != NULL; i++) {
 		if (strlen(map[i]) % 2) {
-			return (0);
+			return (i + 1);
 		}
 	}
 
-	return (1);
+	return (-1);
 }
 
+//returns 0 or failing line in case of failure
 int check_square_of_2_letter_or_2_empty_blocks(char **map) {
 	char c, p;
 
@@ -224,20 +231,21 @@ int check_square_of_2_letter_or_2_empty_blocks(char **map) {
 
 				//If [j - 1] capitalised && [j] !capitalised
 				if (p >= 'a' && p <= 'z' && !(c >= 'a' && c <= 'z')) {
-					return (0);
+					return (i + 1);
 				}
 
 				//If [j - 1] empty && [j] !empty
 				if (p == EMPTY && c != EMPTY) {
-					return (0);
+					return (i + 1);
 				}
 			}
 		}
 	}
-	return (1);
+	return (-1);
 }
 
 int test_puzzled(char *cword_file) {
+	int row;
 	char *cword = NULL;
 	char **map = NULL;
 	unsigned int line_count = 0;
@@ -253,26 +261,26 @@ int test_puzzled(char *cword_file) {
 	show_map(map);
 
 	printf("Running tests...\n");
-	if (!check_row_size(map)) {
-		printf("failed: row size : make sure every line has the same size\n");
+	if ((row = check_row_size(map)) >= 0) {
+		printf("failed: at row[%d]: row size : make sure every line has the same size\n", row);
 	}
-	else if (!check_row_lenght_not_even(map)) {
-		printf("failed: row size not even\n");
+	else if ((row = check_row_lenght_not_even(map)) >= 0) {
+		printf("failed: at row[%d]: row size not even\n", row);
 	}
-	else if (!check_wrong_character(map)) {
-		printf("failed: wrong character: characters must be uncapitalised letters or %c \n", EMPTY);
+	else if ((row = check_wrong_character(map)) >= 0) {
+		printf("failed: at row[%d]: wrong character: characters must be uncapitalised letters or %c \n", row, EMPTY);
 	}
-	else if (!check_square_of_2_letter_or_2_empty_blocks(map)) {
-		printf("failed: each square must contain 2 letters or 2 empty blocks \n");
+	else if ((row = check_square_of_2_letter_or_2_empty_blocks(map)) >= 0) {
+		printf("failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n", row);
 	}
-	else if (!check_at_least_one_blank(map)) {
-		printf("failed: each column and row must contain at least one blank\n");
+	else if ((row = check_at_least_one_blank(map)) >= 0) {
+		printf("failed: at row[%d]: each column and row must contain at least one blank\n", row);
 	}
-	else if (!check_row_and_col_filled_at_50_per_cent(map)) {
-		printf("failed: each column and row must be filled more than 50 percent \n");
+	else if ((row = check_row_and_col_filled_at_50_per_cent(map)) >= 0) {
+		printf("failed: at row[%d]: each column and row must be filled more than 50 percent \n", row);
 	}
-	else if (!check_no_duplicated_words(map)) {
-		printf("failed: no duplicated words \n");
+	else if ((row = check_no_duplicated_words(map)) >= 0) {
+		printf("failed: at row[%d]: no duplicated words \n", row);
 	}
 
 	free(cword);
