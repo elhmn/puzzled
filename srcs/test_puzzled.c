@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 16:53:02 2019                        by bmbarga      */
+/*   Updated: Tue Dec 17 17:26:03 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,7 +346,14 @@ int test_puzzled(char *cword_file) {
 		printf("failed: at row[%d]: no duplicated col words \n", row);
 	}
 
+	//free memory
 	free(cword);
 	free(map);
+
+	//failed
+	if (row >= 0) {
+		exit(EXIT_FAILURE);
+	}
+
 	return (0);
 }

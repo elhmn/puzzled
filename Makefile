@@ -6,7 +6,7 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Tue Dec 17 10:51:57 2019                        by bmbarga      #
+#   Updated: Tue Dec 17 17:35:41 2019                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
@@ -40,7 +40,7 @@ $(OBJS): $(SRCS)
 	mv $(OBJ) $(OBJDIR)
 
 test: $(NAME)
-	for f in $$(ls -1 ./tests | grep wrong); do echo ./tests/$$f; ./puzzled -t ./tests/$$f; echo ""; done;
+	@./scripts/test_wrong.sh
 
 clean:
 	rm -rf $(OBJS)
