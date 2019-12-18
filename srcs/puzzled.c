@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Mon Dec 16 16:50:51 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 11:09:16 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,29 @@
 #include <string.h>
 #include <stdlib.h>
 #include "puzzled.h"
+
+//get map row count
+int get_map_row_count(char **map) {
+	int n = 0;
+
+	if (!map) {
+		return (n);
+	}
+
+	for (int i = 0; map[i]; i++) {
+		n++;
+	}
+	return (n);
+}
+
+//get map col count
+int get_map_col_count(char **map) {
+	if (!map) {
+		return (0);
+	}
+
+	return (strlen(map[0]));
+}
 
 int puzzled(int n, int m, char *dict_file) {
 	char *dict = NULL;

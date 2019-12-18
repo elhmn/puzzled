@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 09:40:28 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 13:29:03 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,58 +208,116 @@ int get_next_letter_in_row(char **map, int i, int j) {
 	return (j);
 }
 
-//returns 0 or failing line in case of failure
-int check_no_duplicated_row_words(char **map) {
-	char c1, c2;
+char **new_words_list(char **map) {
+	char **words = NULL;
+	int row_count = 0;
+	int col_count = 0;
+	int words_count = 0;
+	int words_max_len = 0;
+
+	row_count = get_map_row_count(map);
+	col_count = get_map_col_count(map);
+
+	//get the maximum count of words present in a grid
+	words_count = row_count + (col_count / 2);
+
+	//get the maximum count of line a word can have
+	words_max_len = row_count * 2;
+	if (row_count < col_count) {
+		words_max_len = col_count;
+	}
+
+	if (!(words = (char**)malloc(sizeof(char*) * (words_count + 1)))) {
+		return (NULL);
+	}
+	words[words_count] = NULL;
+
+	for (int i = 0; i < words_count; i++) {
+		if (!(words[i] = (char*)malloc(sizeof(char) * (words_max_len + 1)))) {
+			return (NULL);
+		}
+		words[i][words_max_len] = '\0';
+	}
+
+	printf("row count : %d\n", row_count); // Debug
+	printf("col count : %d\n", col_count); // Debug
+	printf("words count : %d\n", words_count); // Debug
+	printf("words max len : %d\n", words_max_len); // Debug
+
+	return (words);
+}
+
+//returns word map
+char **get_words(char **map) {
+	char **words = NULL;
+	char c;
 	int i, j;
 	int k, l;
-	int match;
+	int m, n;
 
 	if (!map) {
-		return (0);
+		return (NULL);
 	}
 
+	if (!(words = new_words_list(map))) {
+		return (NULL);
+	}
+
+	//Get horizontal words
 	i = -1;
+	k = -1;
 	while (map[++i]) {
-		k = i;
-		while (map[++k]) {
-			j = -1;
-			l = -1;
-			match = 1;
-			while ((c1 = map[i][++j])) {
-				//found letter
-				if (c1 >= 'a' && c1 <= 'z') {
-					while (map[k][++l]) {
-						l = get_next_letter_in_row(map, k, l);
-						if ((c2 = map[k][l]) != -1) {
-							if (c2 == c1) {
-								match *= 1;
-							} else {
-								match *= 0;
-							}
-							break;
-						}
-					}
-				}
-			}
-			if (match) {
-				return (i + 1);
+		++k;
+		l = -1;
+		j = -1;
+		while (map[i][++j]) {
+			j = get_next_letter_in_row(map, i, j);
+			if ((c = map[i][j]) != -1) {
+				words[k][++l] = c;
 			}
 		}
+		words[k][++l] = '\0';
 	}
 
-	return (-1);
+	//Get vertical words
+	i = 0;
+	j = -2;
+	k -= 1;
+	while (map[i] && map[i][(j += 2)]) {
+		m = 0;
+		n = j;
+		l = 0;
+		++k;
+		while (map[m] && map[m][n]) {
+			c = map[m][n];
+			if (c >= 'a' && c <= 'z') {
+				words[k][l] = c;
+				l++;
+			}
+			m = (n % 2) ? m + 1 : m;
+			n++;
+			n = (n % 2) ? j + 1 : j;
+		}
+		words[k][l] = '\0';
+	}
+
+	show_map(words); // Debug
+	return (NULL);
 }
 
 //returns 0 or failing line in case of failure
-int check_no_duplicated_col_words(char **map) {
+int check_no_duplicated_words(char **map) {
+// 	char c1, c2;
+// // 	int i, j;
+// 	int k, l;
+// 	int match;
+
 	if (!map) {
 		return (0);
 	}
-
+	get_words(map);
 	return (-1);
 }
-
 
 //returns 0 or failing line in case of failure
 int check_row_lenght_not_even(char **map) {
@@ -339,11 +397,8 @@ int test_puzzled(char *cword_file) {
 	else if ((row = check_row_and_col_filled_at_50_per_cent(map)) >= 0) {
 		printf("failed: at row[%d]: each column and row must be filled more than 50 percent \n", row);
 	}
-	else if ((row = check_no_duplicated_row_words(map)) >= 0) {
-		printf("failed: at row[%d]: no duplicated row words \n", row);
-	}
-	else if ((row = check_no_duplicated_col_words(map)) >= 0) {
-		printf("failed: at row[%d]: no duplicated col words \n", row);
+	else if ((row = check_no_duplicated_words(map)) >= 0) {
+		printf("failed: at row[%d]: no duplicated words \n", row);
 	}
 
 	//free memory
