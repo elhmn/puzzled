@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 13:29:03 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 13:52:12 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,11 +239,6 @@ char **new_words_list(char **map) {
 		words[i][words_max_len] = '\0';
 	}
 
-	printf("row count : %d\n", row_count); // Debug
-	printf("col count : %d\n", col_count); // Debug
-	printf("words count : %d\n", words_count); // Debug
-	printf("words max len : %d\n", words_max_len); // Debug
-
 	return (words);
 }
 
@@ -301,21 +296,36 @@ char **get_words(char **map) {
 		words[k][l] = '\0';
 	}
 
-	show_map(words); // Debug
-	return (NULL);
+	return (words);
 }
 
 //returns 0 or failing line in case of failure
 int check_no_duplicated_words(char **map) {
-// 	char c1, c2;
-// // 	int i, j;
-// 	int k, l;
-// 	int match;
+	char **words = NULL;
+	int i, j;
 
 	if (!map) {
 		return (0);
 	}
-	get_words(map);
+
+	if (!(words = get_words(map))) {
+		printf("Error: could not allocate words\n");
+		return (0);
+	}
+	i = 0;
+	while (words[i]) {
+		j = i + 1;
+		while (words[j]) {
+			printf("[%s], [%s]\n", words[i], words[j]);
+			if (!strcmp(words[i], words[j])) {
+				return (j);
+			}
+			j++;
+		}
+		i++;
+	}
+
+	free(words);
 	return (-1);
 }
 
