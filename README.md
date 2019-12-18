@@ -10,14 +10,14 @@ make
 ### Run
 
 ```
-./puzzled -N <N> <M> [-d <dictionnary>]
+./puzzled -N <N> -M <M> [-d <dictionnary>]
 ```
 
 
 ### Test your grid
 
 ```
-./puzzled -t <test file>
+./puzzled -t <test_file_path>
 ```
 
 The validation uses this format
