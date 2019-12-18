@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 14:19:24 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 14:19:39 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -433,6 +433,8 @@ int test_puzzled(char *cword_file) {
 	if (row >= 0) {
 		exit(EXIT_FAILURE);
 	}
+
+	printf("Congratulations your puzzler is valid !!\n");
 
 	return (0);
 }
