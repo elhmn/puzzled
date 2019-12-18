@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Dec 17 17:26:03 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 09:40:28 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ unsigned int get_line_count(char *cword) {
 		return (0);
 	}
 
-	for (int i = 0; cword[i] != '\0'; i++) {
+	for (int i = 0; cword[i]; i++) {
 		if (cword[i] == '\n'
 				&& cword[i + 1] != '\0'
 				&& cword[i + 1] != '\n') {
@@ -58,7 +58,7 @@ void show_map(char** map) {
 	if (!map) {
 		return ;
 	}
-	for (int i = 0; map[i] != NULL; i++) {
+	for (int i = 0; map[i]; i++) {
 		printf("[%s]\n", map[i]);
 	}
 }
@@ -74,7 +74,7 @@ int check_row_size(char **map) {
 
 	len = strlen(map[0]);
 	prevlen = len;
-	for (int i = 1; map[i] != NULL; i++) {
+	for (int i = 1; map[i]; i++) {
 		if (prevlen != (len = strlen(map[i]))) {
 			return (i + 1);
 		}
@@ -91,8 +91,8 @@ int check_wrong_character(char **map) {
 		return (0);
 	}
 
-	for (int i = 0; map[i] != NULL; i++) {
-		for (int j = 0; (c = map[i][j]) != '\0'; j++) {
+	for (int i = 0; map[i]; i++) {
+		for (int j = 0; (c = map[i][j]); j++) {
 			if (!((c >= 'a' && c <= 'z') || c == EMPTY)) {
 				return (i + 1);
 			}
@@ -114,10 +114,10 @@ int check_at_least_one_blank(char **map) {
 	}
 
 	//Check for at list one empty block in a row
-	for (i = 0; map[i] != NULL; i++) {
+	for (i = 0; map[i]; i++) {
 		found = 0;
 
-		for (j = 0; (c = map[i][j]) != '\0'; j++) {
+		for (j = 0; (c = map[i][j]); j++) {
 			if (c == EMPTY) {
 				found = 1;
 			}
@@ -130,10 +130,10 @@ int check_at_least_one_blank(char **map) {
 
 	//Check for at list one empty block in a column
 	i = 0;
-	for (j = 0; map[i] != NULL && map[i][j] != '\0'; j++) {
+	for (j = 0; map[i] && map[i][j]; j++) {
 		found = 0;
 
-		for (i = 0; map[i] != NULL && (c = map[i][j]) != '\0'; i++) {
+		for (i = 0; map[i] && (c = map[i][j]); i++) {
 			if (c == EMPTY) {
 				found = 1;
 			}
@@ -159,10 +159,10 @@ int check_row_and_col_filled_at_50_per_cent(char **map) {
 	}
 
 	//Check that the row is filled at more than 50%
-	for (i = 0; map[i] != NULL; i++) {
+	for (i = 0; map[i]; i++) {
 		found = 0;
 
-		for (j = 0; (c = map[i][j]) != '\0'; j++) {
+		for (j = 0; (c = map[i][j]); j++) {
 			if (c == EMPTY) {
 				found++;
 			}
@@ -175,10 +175,10 @@ int check_row_and_col_filled_at_50_per_cent(char **map) {
 
 	//Check that the row is filled at more than 50%
 	i = 0;
-	for (j = 0; map[i] != NULL && map[i][j] != '\0'; j++) {
+	for (j = 0; map[i] && map[i][j]; j++) {
 		found = 0;
 
-		for (i = 0; map[i] != NULL && (c = map[i][j]) != '\0'; i++) {
+		for (i = 0; map[i] && (c = map[i][j]); i++) {
 			if (c == EMPTY) {
 				found++;
 			}
@@ -220,13 +220,13 @@ int check_no_duplicated_row_words(char **map) {
 	}
 
 	i = -1;
-	while (map[++i] != NULL) {
+	while (map[++i]) {
 		k = i;
 		while (map[++k]) {
 			j = -1;
 			l = -1;
 			match = 1;
-			while ((c1 = map[i][++j]) != '\0') {
+			while ((c1 = map[i][++j])) {
 				//found letter
 				if (c1 >= 'a' && c1 <= 'z') {
 					while (map[k][++l]) {
@@ -267,7 +267,7 @@ int check_row_lenght_not_even(char **map) {
 		return (0);
 	}
 
-	for (int i = 0; map[i] != NULL; i++) {
+	for (int i = 0; map[i]; i++) {
 		if (strlen(map[i]) % 2) {
 			return (i + 1);
 		}
@@ -284,8 +284,8 @@ int check_square_of_2_letter_or_2_empty_blocks(char **map) {
 		return (0);
 	}
 
-	for (int i = 0; map[i] != NULL; i++) {
-		for (int j = 0; (c = map[i][j]) != '\0'; j++) {
+	for (int i = 0; map[i]; i++) {
+		for (int j = 0; (c = map[i][j]); j++) {
 			if (j % 2 != 0) {
 				p = map[i][j - 1];
 
