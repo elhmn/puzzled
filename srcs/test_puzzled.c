@@ -328,7 +328,7 @@ int test_puzzled(char *cword_file) {
 		printf("failed: at row[%d]: row size not even\n", row);
 	}
 	else if ((row = check_wrong_character(map)) >= 0) {
-		printf("failed: at row[%d]: wrong character: characters must be uncapitalised letters or %c \n", row, EMPTY);
+		printf("failed: at row[%d]: wrong character: characters must be uncapitalised letters or `%c` \n", row, EMPTY);
 	}
 	else if ((row = check_square_of_2_letter_or_2_empty_blocks(map)) >= 0) {
 		printf("failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n", row);
