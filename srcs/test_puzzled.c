@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 14:19:39 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 17:49:53 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int get_next_letter_in_row(char **map, int i, int j) {
 }
 
 int free_map(char ***map) {
-	if (!map || *map) {
+	if (!map || !*map) {
 		return (-1);
 	}
 
