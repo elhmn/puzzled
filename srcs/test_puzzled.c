@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 13:52:12 2019                        by bmbarga      */
+/*   Updated: Wed Dec 18 14:19:24 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,21 @@ int get_next_letter_in_row(char **map, int i, int j) {
 	return (j);
 }
 
+int free_map(char ***map) {
+	if (!map || *map) {
+		return (-1);
+	}
+
+	for (int i = 0; map[0][i]; i++) {
+		free(map[0][i]);
+	}
+
+	free(*map);
+	*map = NULL;
+	return (0);
+}
+
+
 char **new_words_list(char **map) {
 	char **words = NULL;
 	int row_count = 0;
@@ -316,7 +331,6 @@ int check_no_duplicated_words(char **map) {
 	while (words[i]) {
 		j = i + 1;
 		while (words[j]) {
-			printf("[%s], [%s]\n", words[i], words[j]);
 			if (!strcmp(words[i], words[j])) {
 				return (j);
 			}
@@ -325,7 +339,7 @@ int check_no_duplicated_words(char **map) {
 		i++;
 	}
 
-	free(words);
+	free_map(&words);
 	return (-1);
 }
 
