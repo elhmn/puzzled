@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 10:23:52 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 12:10:53 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,20 +106,23 @@ int check_at_least_one_blank(char **grid) {
 
 //returns 0 or failing line in case of failure
 int check_row_and_col_filled_at_50_per_cent(char **grid) {
-	char c;
 	int found;
 	int i, j;
+	int rc, cc;
 
 	if (!grid) {
 		return (0);
 	}
 
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+
 	//Check that the row is filled at more than 50%
-	for (i = 0; grid[i]; i++) {
+	for (i = 0; i < rc; i++) {
 		found = 0;
 
-		for (j = 0; (c = grid[i][j]); j++) {
-			if (c == EMPTY) {
+		for (j = 0; j < cc; j++) {
+			if (grid[i][j] == EMPTY) {
 				found++;
 			}
 		}
@@ -131,16 +134,15 @@ int check_row_and_col_filled_at_50_per_cent(char **grid) {
 
 	//Check that the row is filled at more than 50%
 	i = 0;
-	for (j = 0; grid[i] && grid[i][j]; j++) {
+	for (j = 0; j < cc; j++) {
 		found = 0;
 
-		for (i = 0; grid[i] && (c = grid[i][j]); i++) {
-			if (c == EMPTY) {
+		for (i = 0; i < rc; i++) {
+			if (grid[i][j] == EMPTY) {
 				found++;
 			}
 		}
-
-		if (found > i / 2) {
+		if (found > rc / 2) {
 			return (i + 1);
 		}
 	}
@@ -267,6 +269,7 @@ int check_no_duplicated_words(char **grid) {
 		printf("Error: could not allocate words\n");
 		return (0);
 	}
+
 	i = 0;
 	while (words[i]) {
 		j = i + 1;
@@ -331,7 +334,6 @@ int test_puzzled(char *cword_file) {
 	char *cword = NULL;
 	char **grid = NULL;
 	unsigned int line_count = 0;
-
 
 	if (!(cword = getfile(cword_file))) {
 		printf("Error: cword: set to NULL");
