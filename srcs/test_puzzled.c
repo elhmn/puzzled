@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 12:10:53 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 12:26:49 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,21 +171,21 @@ int get_next_letter_in_row(char **grid, int i, int j) {
 
 char **new_words_list(char **grid) {
 	char **words = NULL;
-	int row_count = 0;
-	int col_count = 0;
+	int rc = 0;
+	int cc = 0;
 	int words_count = 0;
 	int words_max_len = 0;
 
-	row_count = get_grid_row_count(grid);
-	col_count = get_grid_col_count(grid);
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
 
 	//get the maximum count of words present in a grid
-	words_count = row_count + (col_count / 2);
+	words_count = rc + (cc / 2);
 
 	//get the maximum count of line a word can have
-	words_max_len = row_count * 2;
-	if (row_count < col_count) {
-		words_max_len = col_count;
+	words_max_len = rc * 2;
+	if (rc < cc) {
+		words_max_len = cc;
 	}
 
 	if (!(words = (char**)malloc(sizeof(char*) * (words_count + 1)))) {
