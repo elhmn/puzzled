@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 09:12:59 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 09:24:19 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "puzzled.h"
+#include "grid.h"
 
 //This is shit I will fix that later
 unsigned int get_line_count(char *cword) {
@@ -34,31 +35,10 @@ unsigned int get_line_count(char *cword) {
 	return (line_count);
 }
 
-//get map row count
-int get_map_row_count(char **map) {
-	int n = 0;
-
-	if (!map) {
-		return (n);
-	}
-
-	for (int i = 0; map[i]; i++) {
-		n++;
-	}
-	return (n);
-}
-
-//get map col count
-int get_map_col_count(char **map) {
-	if (!map) {
-		return (0);
-	}
-
-	return (strlen(map[0]));
-}
-
 int puzzled(int n, int m, char *dict_file) {
 	char *dict = NULL;
+	char **words = NULL;
+	unsigned int line_count = 0;
 
 	printf("puzzled is running with N = [%d] && M = [%d]\n", n, m); // Debug
 
@@ -66,6 +46,9 @@ int puzzled(int n, int m, char *dict_file) {
 		printf("Error: dict: set to NULL");
 		return (-1);
 	}
+
+	line_count = get_line_count(dict);
+	words = set_grid(dict, line_count);
 
 	free(dict);
 	return (0);

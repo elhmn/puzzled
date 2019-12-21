@@ -12,7 +12,7 @@
 
 NAME = puzzled
 
-SRC =	main.c puzzled.c test_puzzled.c getfile.c
+SRC =	main.c puzzled.c test_puzzled.c getfile.c grid.c
 
 OBJ = $(SRC:.c=.o)
 
