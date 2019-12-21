@@ -9,7 +9,7 @@ COLOR_RESET="\033[0m"
 for f in $(ls -1 $TEST_WRONG_DIR | grep wrong)
 	do
 		echo ""
-		./puzzled -t "$TEST_WRONG_DIR/$f"
+		./puzzled -t "$TEST_WRONG_DIR/$f" -q
 		RET=$?
 		if [ $RET -ne 0 ]; then
 			echo -e "--> $TEST_WRONG_DIR/$f: failed properly : exited with $RET: $COLOR_GREEN OK $COLOR_RESET"

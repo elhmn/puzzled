@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 09:52:08 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 10:12:02 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "puzzled.h"
 #include "grid.h"
 #include "color.h"
+
+extern int g_quiet;//access_global
 
 //returns 0 or failing line in case of failure
 int check_row_size(char **grid) {
@@ -339,7 +341,9 @@ int test_puzzled(char *cword_file) {
 	line_count = get_line_count(cword);
 	grid = set_grid(cword, line_count);
 
-	show_grid(grid);
+	if (!g_quiet) {
+		show_grid(grid);
+	}
 
 	printf("Running tests...\n");
 	if ((row = check_row_size(grid)) >= 0) {
