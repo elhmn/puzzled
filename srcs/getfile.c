@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:05:12 2019                        by elhmn        */
-/*   Updated: Mon Dec 16 16:05:13 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 08:28:34 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char *getfile(char *dict_file) {
 	if (!(dict = (char*)malloc(fsize + 1))) {
 		return (NULL);
 	}
+	dict[fsize] = '\0';
 
 	//This call is only
 	fread(dict, 1, fsize, fp);
