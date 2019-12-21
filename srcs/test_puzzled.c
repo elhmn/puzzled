@@ -233,7 +233,6 @@ char **get_words(char **grid) {
 	//Get vertical words
 	i = 0;
 	j = -2;
-	k -= 1;
 	while (grid[i] && grid[i][(j += 2)]) {
 		m = 0;
 		n = j;
