@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 09:24:35 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 09:52:08 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include "puzzled.h"
 #include "grid.h"
+#include "color.h"
 
 //returns 0 or failing line in case of failure
 int check_row_size(char **grid) {
@@ -342,25 +343,25 @@ int test_puzzled(char *cword_file) {
 
 	printf("Running tests...\n");
 	if ((row = check_row_size(grid)) >= 0) {
-		printf("failed: at row[%d]: row size : make sure every line has the same size\n", row);
+		printf(COLOR_RED "failed: at row[%d]: row size : make sure every line has the same size\n" COLOR_RESET, row);
 	}
 	else if ((row = check_row_lenght_not_even(grid)) >= 0) {
-		printf("failed: at row[%d]: row size not even\n", row);
+		printf(COLOR_RED "failed: at row[%d]: row size not even\n" COLOR_RESET, row);
 	}
 	else if ((row = check_wrong_character(grid)) >= 0) {
-		printf("failed: at row[%d]: wrong character: characters must be uncapitalised letters or `%c` \n", row, EMPTY);
+		printf(COLOR_RED "failed: at row[%d]: wrong character: characters must be uncapitalised letters or `%c` \n" COLOR_RESET, row, EMPTY);
 	}
 	else if ((row = check_square_of_2_letter_or_2_empty_blocks(grid)) >= 0) {
-		printf("failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n", row);
+		printf(COLOR_RED "failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n" COLOR_RESET, row);
 	}
 	else if ((row = check_at_least_one_blank(grid)) >= 0) {
-		printf("failed: at row[%d]: each column and row must contain at least one blank\n", row);
+		printf(COLOR_RED "failed: at row[%d]: each column and row must contain at least one blank\n" COLOR_RESET, row);
 	}
 	else if ((row = check_row_and_col_filled_at_50_per_cent(grid)) >= 0) {
-		printf("failed: at row[%d]: each column and row must be filled more than 50 percent \n", row);
+		printf(COLOR_RED "failed: at row[%d]: each column and row must be filled more than 50 percent \n" COLOR_RESET, row);
 	}
 	else if ((row = check_no_duplicated_words(grid)) >= 0) {
-		printf("failed: at row[%d]: no duplicated words \n", row);
+		printf(COLOR_RED "failed: at row[%d]: no duplicated words \n" COLOR_RESET, row);
 	}
 
 	//free memory
@@ -372,7 +373,7 @@ int test_puzzled(char *cword_file) {
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Congratulations your puzzler is valid !!\n");
+	printf(COLOR_GREEN "Congratulations your puzzler is valid !!\n" COLOR_RESET);
 
 	return (0);
 }
