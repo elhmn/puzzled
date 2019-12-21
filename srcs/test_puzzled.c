@@ -61,20 +61,23 @@ int check_wrong_character(char **grid) {
 
 //returns 0 or failing line in case of failure
 int check_at_least_one_blank(char **grid) {
-	char c;
 	int	 found;
 	int i, j;
+	int rc, cc;
 
 	if (!grid) {
 		return (0);
 	}
 
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+
 	//Check for at list one empty block in a row
-	for (i = 0; grid[i]; i++) {
+	for (i = 0; i < rc; i++) {
 		found = 0;
 
-		for (j = 0; (c = grid[i][j]); j++) {
-			if (c == EMPTY) {
+		for (j = 0; j < cc; j++) {
+			if (grid[i][j] == EMPTY) {
 				found = 1;
 			}
 		}
@@ -86,11 +89,11 @@ int check_at_least_one_blank(char **grid) {
 
 	//Check for at list one empty block in a column
 	i = 0;
-	for (j = 0; grid[i] && grid[i][j]; j++) {
+	for (j = 0; j < cc; j++) {
 		found = 0;
 
-		for (i = 0; grid[i] && (c = grid[i][j]); i++) {
-			if (c == EMPTY) {
+		for (i = 0; i < rc; i++) {
+			if (grid[i][j] == EMPTY) {
 				found = 1;
 			}
 		}
