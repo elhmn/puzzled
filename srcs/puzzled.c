@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 09:34:14 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 11:12:33 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "puzzled.h"
 #include "grid.h"
+
+extern int g_quiet;//access_global
 
 //This is shit I will fix that later
 unsigned int get_line_count(char *cword) {
@@ -49,6 +51,10 @@ int puzzled(int n, int m, char *dict_file) {
 
 	line_count = get_line_count(dict);
 	words = set_grid(dict, line_count);
+	if (!g_quiet) {
+		show_grid(words); // Debug
+	}
+	printf("dict words: %d", line_count); // Debug
 
 	free(dict);
 	return (0);
