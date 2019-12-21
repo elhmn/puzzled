@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Wed Dec 18 11:09:16 2019                        by bmbarga      */
+/*   Updated: Sat Dec 21 09:12:59 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,25 @@
 #include <string.h>
 #include <stdlib.h>
 #include "puzzled.h"
+
+//This is shit I will fix that later
+unsigned int get_line_count(char *cword) {
+	unsigned int line_count = 1;
+
+	if (!cword || !strlen(cword) || !strcmp(cword, "\n")) {
+		return (0);
+	}
+
+	for (int i = 0; cword[i]; i++) {
+		if (cword[i] == '\n'
+				&& cword[i + 1] != '\0'
+				&& cword[i + 1] != '\n') {
+			line_count++;
+		}
+	}
+
+	return (line_count);
+}
 
 //get map row count
 int get_map_row_count(char **map) {
