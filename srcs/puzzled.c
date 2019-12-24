@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 11:12:33 2019                        by bmbarga      */
+/*   Updated: Tue Dec 24 15:30:48 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "puzzled.h"
 #include "grid.h"
+#include "color.h"
+#include "dict.h"
 
 extern int g_quiet;//access_global
 
@@ -38,24 +40,45 @@ unsigned int get_line_count(char *cword) {
 }
 
 int puzzled(int n, int m, char *dict_file) {
-	char *dict = NULL;
+	t_dict dict;
+	char *s_dict = NULL;
 	char **words = NULL;
 	unsigned int line_count = 0;
 
-	printf("puzzled is running with N = [%d] && M = [%d]\n", n, m); // Debug
+	printf("crossword generator is running with N = [%d] && M = [%d] ...\n", n, m);
 
-	if (!(dict = getfile(dict_file))) {
+	if (!(s_dict = getfile(dict_file))) {
 		printf("Error: dict: set to NULL");
 		return (-1);
 	}
 
-	line_count = get_line_count(dict);
-	words = set_grid(dict, line_count);
-	if (!g_quiet) {
-		show_grid(words); // Debug
-	}
-	printf("dict words: %d", line_count); // Debug
+	line_count = get_line_count(s_dict);
+	words = set_grid(s_dict, line_count);
 
-	free(dict);
+	if (!g_quiet) {
+		printf("\ninitaliase dictionnary...\n");
+	}
+
+	if (init_dict(n, m, words, line_count, &dict) == -1) {
+		printf(COLOR_RED
+		"failed to initalise dictionnary\n"
+		COLOR_RESET);
+	}
+
+	if (!g_quiet) {
+		printf("dictionnary file line count: %d\n", line_count);
+		dump_dict(&dict);
+		printf("dictionnary initialised\n");
+	}
+
+	if (dict.maxlen < (n > m ? n : m)) {
+		printf(COLOR_RED
+		"unable to create a grid : longest word in the dictionnary is smaller than max(m, n) \n"
+		COLOR_RESET);
+	}
+
+	free(s_dict);
+	free_dict(&dict);
+	free(words);
 	return (0);
 }
