@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*  puzzled.h                                                                 */
+/*  bruteforce.c                                                              */
 /*                                                                            */
 /*   By: elhmn <www.elhmn.com>                                                */
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
-/*   Created:                                                 by elhmn        */
-/*   Updated: Tue Dec 24 15:49:34 2019                        by bmbarga      */
+/*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
+/*   Updated: Tue Dec 24 15:51:21 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdio.h>
+#include "puzzled.h"
 
-#ifndef PUZZLED_H
-# define PUZZLED_H
+char **bruteforce(int n, int m, t_dict dict) {
+	(void)dict;
+	(void)n;
+	(void)m;
 
-#include "dict.h"
-
-#define DICTIONNARY "/usr/share/dict/words"
-#define TESTDIR "./tests/"
-#define EMPTY '.'
-
-int				puzzled(int n, int m, char *file);
-char			*getfile(char *dict_file);
-int				test_puzzled(char *file);
-unsigned int	get_line_count(char *cword);
-char			**bruteforce(int n, int m, t_dict dict);
-
-#endif
+	printf("bruteforce is running...\n");
+	return (NULL);
+}

@@ -43,6 +43,7 @@ int puzzled(int n, int m, char *dict_file) {
 	t_dict dict;
 	char *s_dict = NULL;
 	char **words = NULL;
+	char **cwgrid = NULL;
 	unsigned int line_count = 0;
 
 	printf("crossword generator is running with N = [%d] && M = [%d] ...\n", n, m);
@@ -77,8 +78,12 @@ int puzzled(int n, int m, char *dict_file) {
 		COLOR_RESET);
 	}
 
+	cwgrid = bruteforce(n, m, dict);
+	show_grid(cwgrid);
+
 	free(s_dict);
 	free_dict(&dict);
 	free(words);
+	free_grid(&cwgrid);
 	return (0);
 }
