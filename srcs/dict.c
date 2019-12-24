@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Tue Dec 24 15:30:39 2019                        by bmbarga      */
+/*   Updated: Tue Dec 24 15:47:28 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@
 #include "dict.h"
 #include "grid.h"
 
-void dump_dict(t_dict *dict) {
-	if (dict) {
-		printf("dict {\n");
-		printf("\tdict->ceven:  %d\n", dict->ceven);
-		printf("\tdict->wcount: %d\n", dict->wcount);
-		printf("\tdict->maxlen: %d\n", dict->maxlen);
-		printf("}\n");
-	}
+void dump_dict(t_dict dict) {
+	printf("dict {\n");
+	printf("\tdict->ceven:  %d\n", dict.ceven);
+	printf("\tdict->wcount: %d\n", dict.wcount);
+	printf("\tdict->maxlen: %d\n", dict.maxlen);
+	printf("}\n");
 }
 
 int free_dict(t_dict *dict) {
@@ -56,34 +54,26 @@ int hasValidChar(char *word) {
 	return (0);
 }
 
-char **new_dict_word_list(t_dict *dict, char **words) {
+char **new_dict_word_list(t_dict dict, char **words) {
 	char **new_words = NULL;
-
-	if (!dict) {
-		return (NULL);
-	}
 
 	if (!words) {
 		return (NULL);
 	}
 
-	if (!(new_words = (char**)malloc(sizeof(char*) * (dict->wcount + 1)))) {
+	if (!(new_words = (char**)malloc(sizeof(char*) * (dict.wcount + 1)))) {
 		return (NULL);
 	}
-	new_words[dict->wcount] = NULL;
+	new_words[dict.wcount] = NULL;
 
 	return (new_words);
 }
 
-char **get_new_dict_words(int n, int m, t_dict *dict, char **words, int line_count) {
+char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_count) {
 	char **new_words = NULL;
 	char *s = NULL;
 	int len = 0;
 	int j = 0;
-
-	if (!dict) {
-		return (NULL);
-	}
 
 	if (!words) {
 		return (NULL);
@@ -100,7 +90,7 @@ char **get_new_dict_words(int n, int m, t_dict *dict, char **words, int line_cou
 				if (hasValidChar(s) != -1) {
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
 					if (len < ((n > m ? n : m) * 2)) {
-						if (j >= dict->wcount) {
+						if (j >= dict.wcount) {
 							break;
 						}
 						new_words[j++] = s;
@@ -149,6 +139,6 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 	dict->ceven = ceven;
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
-	dict->words = get_new_dict_words(n, m, dict, words, line_count);
+	dict->words = get_new_dict_words(n, m, *dict, words, line_count);
 	return (0);
 }

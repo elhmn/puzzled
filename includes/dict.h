@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Tue Dec 24 15:13:32 2019                        by bmbarga      */
+/*   Updated: Tue Dec 24 15:31:02 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct	s_dict {
 }				t_dict;
 
 int init_dict(int n, int m, char **words, int line_count, t_dict *dict);
-void dump_dict(t_dict *dict);
+void dump_dict(t_dict dict);
 int free_dict(t_dict *dict);
 
 #endif

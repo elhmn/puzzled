@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Tue Dec 24 15:30:48 2019                        by bmbarga      */
+/*   Updated: Tue Dec 24 15:49:08 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int puzzled(int n, int m, char *dict_file) {
 
 	if (!g_quiet) {
 		printf("dictionnary file line count: %d\n", line_count);
-		dump_dict(&dict);
+		dump_dict(dict);
 		printf("dictionnary initialised\n");
 	}
 
