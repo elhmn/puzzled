@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Tue Dec 24 15:47:28 2019                        by bmbarga      */
+/*   Updated: Wed Dec 25 11:11:43 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int free_dict(t_dict *dict) {
 	return (0);
 }
 
-int hasValidChar(char *word) {
+int has_valid_char(char *word) {
 	int len;
 	char c;
 
@@ -87,7 +87,7 @@ char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_coun
 		if (!((len = strlen(s)) % 2)) {
 			if (len > 2) {
 				//get words than char belongs to [a-z] or [A-Z]
-				if (hasValidChar(s) != -1) {
+				if (has_valid_char(s) != -1) {
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
 					if (len < ((n > m ? n : m) * 2)) {
 						if (j >= dict.wcount) {
@@ -124,7 +124,7 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 			ceven++;
 			if (len > 2) {
 				//get words than char belongs to [a-z] or [A-Z]
-				if (hasValidChar(s) != -1) {
+				if (has_valid_char(s) != -1) {
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
 					if (len < ((n > m ? n : m) * 2)) {
 						wcount++;
