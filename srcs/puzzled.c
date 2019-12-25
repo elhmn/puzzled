@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Tue Dec 24 15:49:08 2019                        by bmbarga      */
+/*   Updated: Wed Dec 25 11:15:05 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int puzzled(int n, int m, char *dict_file) {
 		"unable to create a grid : longest word in the dictionnary is smaller than max(m, n) \n"
 		COLOR_RESET);
 	}
-
 	cwgrid = bruteforce(n, m, dict);
 	show_grid(cwgrid);
 

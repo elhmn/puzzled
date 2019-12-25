@@ -54,6 +54,26 @@ int has_valid_char(char *word) {
 	return (0);
 }
 
+int to_lower(char *word) {
+	int len;
+	char c;
+
+	if (!word) {
+		return (-1);
+	}
+
+	len = strlen(word);
+	for (int i = 0; i < len; i++) {
+		c = word[i];
+		if (c >= 'A' && c <= 'Z') {
+			word[i] = word[i] + 32;
+		}
+	}
+
+	return (0);
+}
+
+
 char **new_dict_word_list(t_dict dict, char **words) {
 	char **new_words = NULL;
 
@@ -88,6 +108,7 @@ char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_coun
 			if (len > 2) {
 				//get words than char belongs to [a-z] or [A-Z]
 				if (has_valid_char(s) != -1) {
+					to_lower(s);
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
 					if (len < ((n > m ? n : m) * 2)) {
 						if (j >= dict.wcount) {
