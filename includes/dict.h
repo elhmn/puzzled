@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Tue Dec 24 15:31:02 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 14:41:42 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 typedef struct	s_dict {
 	int		maxlen; //lenght of the longest word in the dictionnary
+	int		minlen; //lenght of the shortest word in the dictionnary
 	int		wcount; //word count
 	int		ceven; //words that are even
 	char	**words;

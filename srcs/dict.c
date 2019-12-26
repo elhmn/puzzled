@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 12:19:07 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 14:44:41 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void dump_dict(t_dict dict) {
 	printf("\tdict->ceven:  %d\n", dict.ceven);
 	printf("\tdict->wcount: %d\n", dict.wcount);
 	printf("\tdict->maxlen: %d\n", dict.maxlen);
+	printf("\tdict->minlen: %d\n", dict.minlen);
 	printf("}\n");
 }
 
@@ -127,6 +128,7 @@ char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_coun
 int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 	int len;
 	int maxlen = 0;
+	int minlen = -1;
 	int wcount = 0;
 	int ceven = 0;
 	char *s;
@@ -150,6 +152,7 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 					if (len <= (((n > m ? n : m) - 1) * 2)) {
 						wcount++;
 						maxlen = maxlen < len ? len : maxlen;
+						minlen = minlen > len || minlen < 0 ? len : minlen;
 					}
 
 				}
@@ -160,6 +163,7 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 	dict->ceven = ceven;
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
+	dict->minlen = minlen;
 	dict->words = get_new_dict_words(n, m, *dict, words, line_count);
 // 	sort_grid_size(dict->words);
 	return (0);

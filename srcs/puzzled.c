@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 11:32:28 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 14:07:46 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,16 @@ int puzzled(int n, int m, char *dict_file) {
 		printf(COLOR_RED
 		"unable to create a grid : longest word in the dictionnary is smaller than max(m, n) \n"
 		COLOR_RESET);
+	} else if (dict.minlen / 2 >= ((n < m ? n : m) - 1) * 2) {
+		printf(COLOR_RED
+		"unable to create a grid : shortest word in the dictionnary is smaller than 2 * (min(m, n) + 1) \n"
+		COLOR_RESET);
 	} else {
+
+		printf("bruteforce is running...\n");
 		cwgrid = bruteforce(n, m, dict);
+		printf("bruteforce done...\n\n");
+
 		show_grid(cwgrid);
 	}
 
