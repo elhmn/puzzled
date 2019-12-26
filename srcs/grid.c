@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Wed Dec 25 16:20:19 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 11:24:04 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void sort_grid_alphabetic(char **grid) {
 	}
 }
 
-
 void show_grid(char** grid) {
 	if (!grid) {
 		return ;
@@ -114,4 +113,59 @@ int get_grid_col_count(char **grid) {
 	}
 
 	return (strlen(grid[0]));
+}
+
+char **new_grid(int rc, int cc) {
+	char **grid;
+
+	if (rc <= 0 && cc <= 0) {
+		return (NULL);
+	}
+
+	if (!(grid = (char**)malloc(sizeof(char*) * (rc + 1)))) {
+		return (NULL);
+	}
+	grid[rc + 1] = NULL;
+
+	for (int i = 0; i < rc; i++) {
+		if (!(grid[i] = (char*)malloc(sizeof(char) * (cc + 1)))) {
+			return (NULL);
+		}
+		grid[i][cc] = '\0';
+	}
+	return (grid);
+}
+
+void fill_grid(char **grid, char c) {
+	int rc, cc;
+
+	if (grid) {
+		rc = get_grid_row_count(grid);
+		cc = get_grid_col_count(grid);
+		for (int i = 0; i < rc; i++) {
+			for (int j = 0; j < cc; j++) {
+				grid[i][j] = c;
+			}
+		}
+	}
+}
+
+void fill_grid_row_col(char **grid, int rc, int cc, char c) {
+	if (grid) {
+		for (int i = 0; i < rc; i++) {
+			for (int j = 0; j < cc; j++) {
+				grid[i][j] = c;
+			}
+		}
+	}
+}
+
+char **new_filled_grid(int rc, int cc, char c) {
+	char **grid = NULL;
+
+	if (!(grid = new_grid(rc, cc))) {
+		return (NULL);
+	}
+	fill_grid_row_col(grid, rc, cc, c);
+	return (grid);
 }

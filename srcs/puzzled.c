@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 10:58:03 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 11:32:28 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ int puzzled(int n, int m, char *dict_file) {
 	line_count = get_line_count(s_dict);
 	words = set_grid(s_dict, line_count);
 
-	if (!g_quiet) {
-		printf("\ninitaliase dictionnary...\n");
-	}
+	printf("\ninitaliase dictionnary...\n");
 
 	if (init_dict(n, m, words, line_count, &dict) == -1) {
 		printf(COLOR_RED
@@ -69,16 +67,17 @@ int puzzled(int n, int m, char *dict_file) {
 	if (!g_quiet) {
 		printf("dictionnary file line count: %d\n", line_count);
 		dump_dict(dict);
-		printf("dictionnary initialised\n");
 	}
+	printf("dictionnary initialised\n\n");
 
 	if (dict.maxlen < (n > m ? n : m)) {
 		printf(COLOR_RED
 		"unable to create a grid : longest word in the dictionnary is smaller than max(m, n) \n"
 		COLOR_RESET);
+	} else {
+		cwgrid = bruteforce(n, m, dict);
+		show_grid(cwgrid);
 	}
-	cwgrid = bruteforce(n, m, dict);
-	show_grid(cwgrid);
 
 	free(s_dict);
 	free_dict(&dict);
