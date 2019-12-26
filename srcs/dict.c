@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 14:44:41 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 15:03:57 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ char **new_dict_word_list(t_dict dict, char **words) {
 	return (new_words);
 }
 
-char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_count) {
+char **get_new_dict_words(int m, int n, t_dict dict, char **words, int line_count) {
 	char **new_words = NULL;
 	char *s = NULL;
 	int len = 0;
@@ -111,7 +111,7 @@ char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_coun
 				if (has_valid_char(s) != -1) {
 					to_lower(s);
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
-					if (len <= (((n > m ? n : m) - 1) * 2)) {
+					if (len <= (((m > n ? m : n) - 1) * 2)) {
 						if (j >= dict.wcount) {
 							break;
 						}
@@ -125,7 +125,7 @@ char **get_new_dict_words(int n, int m, t_dict dict, char **words, int line_coun
 	return (new_words);
 }
 
-int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
+int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	int len;
 	int maxlen = 0;
 	int minlen = -1;
@@ -149,7 +149,7 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 				//get words than char belongs to [a-z] or [A-Z]
 				if (has_valid_char(s) != -1) {
 					//get words that can fit in the grid whose size is : len(w) >= max(m - 1, n - 1) * 2
-					if (len <= (((n > m ? n : m) - 1) * 2)) {
+					if (len <= (((m > n ? m : n) - 1) * 2)) {
 						wcount++;
 						maxlen = maxlen < len ? len : maxlen;
 						minlen = minlen > len || minlen < 0 ? len : minlen;
@@ -164,7 +164,7 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
 	dict->minlen = minlen;
-	dict->words = get_new_dict_words(n, m, *dict, words, line_count);
+	dict->words = get_new_dict_words(m, n, *dict, words, line_count);
 // 	sort_grid_size(dict->words);
 	return (0);
 }

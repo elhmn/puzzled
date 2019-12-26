@@ -1,5 +1,5 @@
 # puzzled
-Crossword grid generator
+Brandwatch 2019 puzzler: Crossword grid generator
 
 ## Install
 
@@ -10,7 +10,7 @@ make
 ### Run
 
 ```
-./puzzled -N <N> -M <M> [-d <dictionnary>]
+./puzzled -M <M> -N <N> [-d <dictionnary>]
 ```
 
 

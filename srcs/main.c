@@ -19,8 +19,8 @@
 int g_quiet = 0;
 
 void print_usage(char *program) {
-	printf("Usage:\n%s -N nRows -M nColumns [-d dictionnaryFilePath]\n", program);
-	printf("\tWhere N > 0 and M > 0 \n\n");
+	printf("Usage:\n%s -M nRows -N nColumns [-d dictionnaryFilePath]\n", program);
+	printf("\tWhere M > 0 and N > 0 \n\n");
 	printf("-q to disable grid output\n");
 	printf("-t [testFilePath] to test crossword:\n");
 	printf("\t%s -t [testFilePath]\n", program);
@@ -29,7 +29,7 @@ void print_usage(char *program) {
 int		main(int ac, char** av) {
 	char *dict_file = DICTIONNARY;
 	char *test_file = NULL;
-	int c, n, m = 0;
+	int c, m, n = 0;
 
 	//getopt does not display error in case of failure
 	opterr = 0;
@@ -48,11 +48,11 @@ int		main(int ac, char** av) {
 				case 'd' :
 					dict_file = optarg;
 					break;
-					//Number of rows
+					//Number of columns
 				case 'N' :
 					n = atoi(optarg);
 					break;
-					//Number of columns
+					//Number of rows
 				case 'M' :
 					m = atoi(optarg);
 					break;
@@ -73,11 +73,11 @@ int		main(int ac, char** av) {
 		test_puzzled(test_file);
 	} else {
 		//check flags
-		if (n <= 0 || m <= 0) {
+		if (m <= 0 || n <= 0) {
 			print_usage(av[0]);
 			return (EXIT_FAILURE);
 		}
-		puzzled(n, m, dict_file);
+		puzzled(m, n, dict_file);
 	}
 
 	return (EXIT_SUCCESS);

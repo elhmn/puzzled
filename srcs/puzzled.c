@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 14:51:46 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 14:55:47 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ unsigned int get_line_count(char *cword) {
 	return (line_count);
 }
 
-int puzzled(int n, int m, char *dict_file) {
+int puzzled(int m, int n, char *dict_file) {
 	t_dict dict;
 	char *s_dict = NULL;
 	char **words = NULL;
 	char **cwgrid = NULL;
 	unsigned int line_count = 0;
 
-	printf("crossword generator is running with N = [%d] && M = [%d] ...\n", n, m);
+	printf("crossword generator is running with M = [%d] && N = [%d] ...\n", m, n);
 
 	if (!(s_dict = getfile(dict_file))) {
 		printf("Error: dict: set to NULL");
@@ -58,7 +58,7 @@ int puzzled(int n, int m, char *dict_file) {
 
 	printf("\ninitaliase dictionnary...\n");
 
-	if (init_dict(n, m, words, line_count, &dict) == -1) {
+	if (init_dict(m, n, words, line_count, &dict) == -1) {
 		printf(COLOR_RED
 		"failed to initalise dictionnary\n"
 		COLOR_RESET);
@@ -70,18 +70,18 @@ int puzzled(int n, int m, char *dict_file) {
 	}
 	printf("dictionnary initialised\n\n");
 
-	if (dict.maxlen < (n > m ? n : m)) {
+	if (dict.maxlen < (m > n ? m : n)) {
 		printf(COLOR_RED
 		"unable to create a grid : longest word (len = %d) in the dictionnary is smaller than max(m, n) \n"
 		COLOR_RESET, dict.maxlen);
-	} else if (dict.minlen / 2 >= ((n < m ? n : m) - 1) * 2) {
+	} else if (dict.minlen / 2 >= ((m < n ? m : n) - 1) * 2) {
 		printf(COLOR_RED
 		"unable to create a grid : shortest word (len = %d) in the dictionnary is smaller than 2 * (min(m, n) + 1) \n"
 		COLOR_RESET, dict.minlen);
 	} else {
 
 		printf("bruteforce is running...\n");
-		cwgrid = bruteforce(n, m, dict);
+		cwgrid = bruteforce(m, n, dict);
 		printf("bruteforce done...\n\n");
 
 		show_grid(cwgrid);

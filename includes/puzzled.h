@@ -19,10 +19,10 @@
 #define TESTDIR "./tests/"
 #define EMPTY '.'
 
-int				puzzled(int n, int m, char *file);
+int				puzzled(int m, int n, char *file);
 char			*getfile(char *dict_file);
 int				test_puzzled(char *file);
 unsigned int	get_line_count(char *cword);
-char			**bruteforce(int n, int m, t_dict dict);
+char			**bruteforce(int m, int n, t_dict dict);
 
 #endif
