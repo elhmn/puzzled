@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:22:14 2019                        by elhmn        */
-/*   Updated: Tue Dec 24 14:13:52 2019                        by bmbarga      */
+/*   Updated: Wed Dec 25 15:57:21 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,7 @@ int				get_grid_col_count(char **grid);
 char			**set_grid(char *src, unsigned int size);
 int				free_grid(char ***grid);
 void			show_grid(char** grid);
+void			sort_grid_size(char **grid);
+void			sort_grid_alphabetic(char **grid);
 
 #endif

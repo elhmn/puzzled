@@ -6,13 +6,14 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 09:21:38 2019                        by bmbarga      */
+/*   Updated: Wed Dec 25 16:20:19 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "grid.h"
 
 char **set_grid(char *src, unsigned int size) {
 	char **grid = NULL;
@@ -33,6 +34,41 @@ char **set_grid(char *src, unsigned int size) {
 	}
 	return (grid);
 }
+
+void sort_grid_size(char **grid) {
+	int len;
+	int i, j;
+	char *jtmp;
+	char *swap;
+
+	if (grid) {
+		len = get_grid_row_count(grid);
+		for (i = 1; i < len; i++) {
+			for (j = i; j > 0 && strlen(swap = grid[j - 1]) < strlen(jtmp = grid[j]); j--) {
+				grid[j] = swap;
+				grid[j - 1] = jtmp;
+			}
+		}
+	}
+}
+
+void sort_grid_alphabetic(char **grid) {
+	int len;
+	int i, j;
+	char *jtmp;
+	char *swap;
+
+	if (grid) {
+		len = get_grid_row_count(grid);
+		for (i = 1; i < len; i++) {
+			for (j = i; j > 0 && strcmp((swap = grid[j - 1]), (jtmp = grid[j])) > 0; j--) {
+				grid[j] = swap;
+				grid[j - 1] = jtmp;
+			}
+		}
+	}
+}
+
 
 void show_grid(char** grid) {
 	if (!grid) {

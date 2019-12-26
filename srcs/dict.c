@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Wed Dec 25 11:11:43 2019                        by bmbarga      */
+/*   Updated: Thu Dec 26 10:57:18 2019                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,5 +161,6 @@ int init_dict(int n, int m, char **words, int line_count, t_dict *dict) {
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
 	dict->words = get_new_dict_words(n, m, *dict, words, line_count);
+// 	sort_grid_size(dict->words);
 	return (0);
 }
