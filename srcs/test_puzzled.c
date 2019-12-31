@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Sat Dec 21 12:26:49 2019                        by bmbarga      */
+/*   Updated: Tue Jan 07 01:11:33 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,45 @@ char **new_words_list(char **grid) {
 	return (words);
 }
 
+char **get_vertical_words(char **grid) {
+	char **words = NULL;
+	char c;
+	int i, j;
+	int k, l;
+	int m, n;
+
+	if (!grid) {
+		return (NULL);
+	}
+
+	if (!(words = new_words_list(grid))) {
+		return (NULL);
+	}
+
+	i = 0;
+	j = -2;
+	k = 0;
+	while (grid[i] && grid[i][(j += 2)]) {
+		m = 0;
+		n = j;
+		l = 0;
+		++k;
+		while (grid[m] && grid[m][n]) {
+			c = grid[m][n];
+			if (c >= 'a' && c <= 'z') {
+				words[k][l] = c;
+				l++;
+			}
+			m = (n % 2) ? m + 1 : m;
+			n++;
+			n = (n % 2) ? j + 1 : j;
+		}
+		words[k][l] = '\0';
+	}
+
+	return (words);
+}
+
 //returns word grid
 char **get_words(char **grid) {
 	char **words = NULL;
@@ -278,11 +317,38 @@ int check_no_duplicated_words(char **grid) {
 		j = i + 1;
 		while (words[j]) {
 			if (!strcmp(words[i], words[j])) {
+				free_grid(&words);
 				return (j);
 			}
 			j++;
 		}
 		i++;
+	}
+
+	free_grid(&words);
+	return (-1);
+}
+
+//returns 0 or failing line in case of failure
+int check_words_belong_to_dictionnary(char **grid, t_dict dict) {
+	char **words = NULL;
+	int i;
+
+	if (!grid) {
+		return (-1);
+	}
+
+	if (!(words = get_words(grid))) {
+		printf("Error: could not allocate words\n");
+		return (-1);
+	}
+
+	i = -1;
+	while (words[++i]) {
+		if (search_word(&dict, words[i]) < 0) {
+			free_grid(&words);
+			return (0);
+		}
 	}
 
 	free_grid(&words);
@@ -353,38 +419,38 @@ int test_puzzled(char *cword_file) {
 	printf("Running tests...\n");
 	if ((row = check_row_size(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: row size : make sure every line has the same size\n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: row size : make sure every line has the same size\n"
+				COLOR_RESET, row);
 	}
 	else if ((row = check_row_lenght_not_even(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: row size not even\n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: row size not even\n"
+				COLOR_RESET, row);
 	}
 	else if ((row = check_wrong_character(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: wrong character: characters must be uncapitalised letters or `%c` \n"
-		COLOR_RESET, row, EMPTY);
+				"failed: at row[%d]: wrong character: characters must be uncapitalised letters or `%c` \n"
+				COLOR_RESET, row, EMPTY);
 	}
 	else if ((row = check_square_of_2_letter_or_2_empty_blocks(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: each square must contain 2 letters or 2 empty blocks \n"
+				COLOR_RESET, row);
 	}
 	else if ((row = check_at_least_one_blank(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: each column and row must contain at least one blank\n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: each column and row must contain at least one blank\n"
+				COLOR_RESET, row);
 	}
 	else if ((row = check_row_and_col_filled_at_50_per_cent(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: each column and row must be filled more than 50 percent \n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: each column and row must be filled more than 50 percent \n"
+				COLOR_RESET, row);
 	}
 	else if ((row = check_no_duplicated_words(grid)) >= 0) {
 		printf(COLOR_RED
-		"failed: at row[%d]: no duplicated words \n"
-		COLOR_RESET, row);
+				"failed: at row[%d]: no duplicated words \n"
+				COLOR_RESET, row);
 	}
 
 	//free memory

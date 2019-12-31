@@ -6,12 +6,14 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Thu Dec 26 14:41:43 2019                        by bmbarga      */
+/*   Updated: Sun Jan 05 16:40:24 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DICT_H
 # define DICT_H
+
+# define INDEX_SIZE 26
 
 typedef struct	s_dict {
 	int		maxlen; //lenght of the longest word in the dictionnary
@@ -19,10 +21,22 @@ typedef struct	s_dict {
 	int		wcount; //word count
 	int		ceven; //words that are even
 	char	**words;
+	char	***comb; //list of word combinations
+	int		*comb_count; //list of word combinations
+	int		*placed_w; //list of word combinations
+	int		index[INDEX_SIZE]; //dictionnary alphabetic index
 }				t_dict;
 
 int init_dict(int m, int n, char **words, int line_count, t_dict *dict);
 void dump_dict(t_dict dict);
 int free_dict(t_dict *dict);
+int search_word(t_dict *dict, char *word);
+int get_end_index(t_dict *dict, char *word);
+int get_start_index(t_dict *dict, char *word);
+
+//combinations
+void free_comb(char ****comb);
+char ***new_word_combination_list(t_dict dict);
+void dump_combinations(char ***comb);
 
 #endif

@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 15:03:57 2019                        by bmbarga      */
+/*   Updated: Tue Jan 07 01:28:31 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,26 @@ void dump_dict(t_dict dict) {
 	printf("\tdict->wcount: %d\n", dict.wcount);
 	printf("\tdict->maxlen: %d\n", dict.maxlen);
 	printf("\tdict->minlen: %d\n", dict.minlen);
+	printf("\tdict->index: {\n");
+	for (int i = 0; i < INDEX_SIZE; i++) {
+		printf("\t\t%c:%d:[%s]", (i + (int)'a'), dict.index[i], dict.words[dict.index[i]]);
+		if (i != INDEX_SIZE - 1) {
+			printf(",\n");
+		}
+	}
+	printf("\n\t}\n");
+
 	printf("}\n");
+}
+
+void dump_combinations(char ***comb) {
+	if (comb) {
+		for (int i = 0; comb[i]; i++) {
+			printf("combinations[%d]\n", i);
+			show_grid(comb[i]);
+			printf("----\n");
+		}
+	}
 }
 
 int free_dict(t_dict *dict) {
@@ -31,6 +50,8 @@ int free_dict(t_dict *dict) {
 	}
 
 	free(dict->words);
+	free_comb(&dict->comb);
+	free(dict->placed_w);
 
 	return (0);
 }
@@ -74,6 +95,50 @@ int to_lower(char *word) {
 	return (0);
 }
 
+int get_start_index(t_dict *dict, char *word) {
+	if (dict && word) {
+		return (dict->index[word[0] % 'a']);
+	}
+
+	return (-1);
+}
+
+int get_end_index(t_dict *dict, char *word) {
+	int i;
+
+	if (dict && word) {
+		i = word[0] % 'a';
+		while (++i < INDEX_SIZE) {
+			if (dict->index[i] >= 0) {
+				return (dict->index[i]);
+			}
+		}
+		return (dict->wcount);
+	}
+
+	return (-1);
+}
+
+int search_word(t_dict *dict, char *word) {
+	int idx_start;
+	int	idx_end;
+
+	if (dict && word) {
+		if ((idx_start = get_start_index(dict, word)) < 0) {
+			return (-1);
+		}
+		if ((idx_end = get_end_index(dict, word)) < 0) {
+			return (-1);
+		}
+
+		for (int i = idx_start; i < idx_end; i++) {
+			if (!strcmp(dict->words[i], word)) {
+				return (i);
+			}
+		}
+	}
+	return (-1);
+}
 
 char **new_dict_word_list(t_dict dict, char **words) {
 	char **new_words = NULL;
@@ -125,6 +190,20 @@ char **get_new_dict_words(int m, int n, t_dict dict, char **words, int line_coun
 	return (new_words);
 }
 
+void init_index(t_dict *dict) {
+	if (dict) {
+		for (int i = 0; i < INDEX_SIZE; i++) {
+			dict->index[i] = -1;
+		}
+
+		for (int i = 0; i < dict->wcount && dict->index[25] == -1; i++) {
+			if (dict->index[dict->words[i][0] % 'a'] == -1) {
+				dict->index[dict->words[i][0] % 'a'] = i;
+			}
+		}
+	}
+}
+
 int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	int len;
 	int maxlen = 0;
@@ -164,7 +243,47 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
 	dict->minlen = minlen;
+
 	dict->words = get_new_dict_words(m, n, *dict, words, line_count);
-// 	sort_grid_size(dict->words);
+	sort_grid_alphabetic(dict->words);
+	init_index(dict);
+
+	dict->comb = new_word_combination_list(*dict);
+	if (!(dict->comb_count = (int*)malloc(sizeof(int) * dict->wcount))) {
+		return (-1);
+	}
+
+	if (!(dict->placed_w = (int*)malloc(sizeof(int) * n * 2))) {
+		return (-1);
+	}
+	for (int i = 0; i < n * 2; i++) {
+		dict->placed_w[i] = -1;
+	}
+
 	return (0);
+}
+
+char ***new_word_combination_list(t_dict dict) {
+	char ***comb = NULL;
+
+	if (!(comb = (char***)malloc(sizeof(char**) * (dict.wcount + 1)))) {
+		return (NULL);
+	}
+	for (int i = 0; i <= dict.wcount; i++) {
+		comb[i] = NULL;
+	}
+	return (comb);
+}
+
+void free_comb(char ****comb) {
+	if (comb && *comb) {
+		for (int i = 0; comb[0][i]; i++) {
+			if (comb[0][i] != NULL) {
+				free_grid(*comb + i);
+			}
+		}
+	}
+
+	free(*comb);
+	*comb = NULL;
 }

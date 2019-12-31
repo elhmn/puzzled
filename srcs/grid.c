@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Thu Dec 26 11:28:58 2019                        by bmbarga      */
+/*   Updated: Mon Jan 06 16:50:16 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void show_grid(char** grid) {
 		return ;
 	}
 	for (int i = 0; grid[i]; i++) {
-		printf("[%s]\n", grid[i]);
+		printf("%d-[%s]\n", i, grid[i]);
 	}
 }
 
@@ -108,13 +108,14 @@ int get_grid_row_count(char **grid) {
 
 //get grid col count
 int get_grid_col_count(char **grid) {
-	if (!grid) {
+	if (!grid || !grid[0]) {
 		return (0);
 	}
 
 	return (strlen(grid[0]));
 }
 
+//returns a 2 dimension grid initialised
 char **new_grid(int rc, int cc) {
 	char **grid;
 
@@ -135,6 +136,38 @@ char **new_grid(int rc, int cc) {
 	}
 	return (grid);
 }
+
+char **new_grid_uni_dimension(int rc) {
+	char **grid;
+
+	if (!(grid = (char**)malloc(sizeof(char*) * (rc + 1)))) {
+		return (NULL);
+	}
+	for (int i = 0; i <= rc; i++) {
+		grid[i] = NULL;
+	}
+	return (grid);
+}
+
+char **duplicate_grid_and_keep_col(int rc, char **src) {
+	char **grid;
+
+	if (!src) {
+		return (NULL);
+	}
+
+	if (!(grid = (char**)malloc(sizeof(char*) * (rc + 1)))) {
+		return (NULL);
+	}
+	grid[rc] = NULL;
+
+	for (int i = 0; i < rc; i++) {
+		grid[i] = src[i];
+	}
+
+	return (grid);
+}
+
 
 void fill_grid(char **grid, char c) {
 	int rc, cc;
