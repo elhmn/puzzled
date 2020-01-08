@@ -6,7 +6,7 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Sun Jan 05 18:50:53 2020                        by bmbarga      #
+#   Updated: Wed Jan 08 12:20:14 2020                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
@@ -30,13 +30,22 @@ CC = gcc
 
 FLAGS = -Wall -Werror -Wextra
 
+
+ifeq ($(DEBUG), 1)
+DEBUG_FLAG= -g
+endif
+
+ifeq ($(SAN), 1)
+SANITIZE= -fsanitize=address,undefined -ferror-limit=10
+endif
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(DEBUG_FLAG) $(FLAGS) $(SANITIZE) -o $(NAME) $(OBJS)
 
 $(OBJS): $(SRCS)
-	$(CC) $(FLAGS) $(INC) -c $(SRCS)
+	$(CC) $(DEBUG_FLAG) $(FLAGS) $(SANITIZE) $(INC) -c $(SRCS)
 	mv $(OBJ) $(OBJDIR)
 
 test: $(NAME)
