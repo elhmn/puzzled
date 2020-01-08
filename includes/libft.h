@@ -30,4 +30,15 @@ void				ft_lstadd(t_list **alst, t_list *new);
 void				ft_lstadd_end(t_list **alst, t_list *new);
 t_list				*ft_lstmap(t_list *lst, t_list *(*f) (t_list *elem));
 
+//very basic hash table
+typedef struct		s_hash
+{
+	t_list			**table;
+	size_t			size;
+}					t_hash;
+
+t_hash				*ft_new_hash_table(size_t size);
+t_list 				*ft_hash_get_node(t_hash *h, char *str);
+void				ft_hash_insert(t_hash *h, unsigned char *str, void const *content);
+
 #endif

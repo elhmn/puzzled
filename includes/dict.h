@@ -6,14 +6,17 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Sun Jan 05 16:40:24 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 17:45:06 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DICT_H
 # define DICT_H
 
+# include "libft.h"
+
 # define INDEX_SIZE 26
+# define HASHTABLE_SIZE 10000
 
 typedef struct	s_dict {
 	int		maxlen; //lenght of the longest word in the dictionnary
@@ -25,6 +28,7 @@ typedef struct	s_dict {
 	int		*comb_count; //list of word combinations
 	int		*placed_w; //list of word combinations
 	int		index[INDEX_SIZE]; //dictionnary alphabetic index
+	t_hash	*hash; //hash table that contains every ordered of cell valid in a dictionnary
 }				t_dict;
 
 int init_dict(int m, int n, char **words, int line_count, t_dict *dict);

@@ -6,14 +6,14 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Wed Jan 08 16:28:30 2020                        by bmbarga      #
+#   Updated: Wed Jan 08 17:29:08 2020                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
 NAME = puzzled
 
 LIBFT =	ft_lstnew.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c ft_lstadd.c \
-		ft_lstmap.c ft_lstadd_end.c
+		ft_lstmap.c ft_lstadd_end.c ft_hash.c
 
 LIBFTDIR = libft/
 

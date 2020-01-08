@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 14:46:23 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 17:57:45 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,17 @@ void init_index(t_dict *dict) {
 	}
 }
 
+t_hash *get_new_hash(t_dict dict) {
+	t_hash *h;
+
+	(void)dict;
+	if (!(h = ft_new_hash_table(HASHTABLE_SIZE))) {
+		return (NULL);
+	}
+
+	return (h);
+}
+
 int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	int len;
 	int maxlen = 0;
@@ -262,6 +273,8 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	for (int i = 0; i < m; i++) {
 		dict->placed_w[i] = -1;
 	}
+
+	dict->hash = get_new_hash(*dict);
 	return (0);
 }
 
