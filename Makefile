@@ -6,21 +6,28 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Wed Jan 08 14:18:45 2020                        by bmbarga      #
+#   Updated: Wed Jan 08 16:28:30 2020                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
 NAME = puzzled
 
+LIBFT =	ft_lstnew.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c ft_lstadd.c \
+		ft_lstmap.c ft_lstadd_end.c
+
+LIBFTDIR = libft/
+
+LIBFTS = $(addprefix $(LIBFTDIR), $(LIBFT))
+
 SRC =	main.c puzzled.c test_puzzled.c getfile.c grid.c dict.c bruteforce.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o) $(LIBFT:.c=.o)
 
 OBJDIR = ./objs/
 
 SRCDIR = ./srcs/
 
-SRCS = $(addprefix $(SRCDIR), $(SRC))
+SRCS = $(addprefix $(SRCDIR), $(SRC)) $(addprefix $(SRCDIR), $(LIBFTS))
 
 OBJS = $(addprefix $(OBJDIR), $(OBJ))
 
@@ -32,11 +39,11 @@ FLAGS = -Wall -Werror -Wextra
 
 
 ifeq ($(DEBUG), 1)
-DEBUG_FLAG= -g
+DEBUG_FLAG = -g
 endif
 
 ifeq ($(SAN), 1)
-SANITIZE= -fsanitize=address,undefined -ferror-limit=10
+SANITIZE = -fsanitize=address,undefined -ferror-limit=10
 endif
 
 all: $(NAME)
