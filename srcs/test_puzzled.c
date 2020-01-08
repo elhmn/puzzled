@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Tue Jan 07 01:11:33 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 12:35:07 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,20 @@ int check_wrong_character(char **grid) {
 
 //returns 0 or failing line in case of failure
 int check_at_least_one_blank(char **grid) {
+	int rc, cc;
+
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+	return (check_at_least_one_blank_rc_cc(grid, rc, cc));
+}
+
+int check_at_least_one_blank_rc_cc(char **grid, int rc, int cc) {
 	int	 found;
 	int i, j;
-	int rc, cc;
 
 	if (!grid) {
 		return (0);
 	}
-
-	rc = get_grid_row_count(grid);
-	cc = get_grid_col_count(grid);
 
 	//Check for at list one empty block in a row
 	for (i = 0; i < rc; i++) {
@@ -106,19 +110,14 @@ int check_at_least_one_blank(char **grid) {
 	return (-1);
 }
 
-
 //returns 0 or failing line in case of failure
-int check_row_and_col_filled_at_50_per_cent(char **grid) {
+int check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
 	int found;
 	int i, j;
-	int rc, cc;
 
 	if (!grid) {
 		return (0);
 	}
-
-	rc = get_grid_row_count(grid);
-	cc = get_grid_col_count(grid);
 
 	//Check that the row is filled at more than 50%
 	for (i = 0; i < rc; i++) {
@@ -153,6 +152,19 @@ int check_row_and_col_filled_at_50_per_cent(char **grid) {
 	return (-1);
 }
 
+//returns 0 or failing line in case of failure
+int check_row_and_col_filled_at_50_per_cent(char **grid) {
+	int rc, cc;
+
+	if (!grid) {
+		return (0);
+	}
+
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+	return (check_row_and_col_filled_at_50_per_cent_rc_cc(grid, rc, cc));
+}
+
 //returns index of next letter in `i` row
 int get_next_letter_in_row(char **grid, int i, int j) {
 	char c = '\0';
@@ -169,24 +181,16 @@ int get_next_letter_in_row(char **grid, int i, int j) {
 	return (j);
 }
 
-char **new_words_list(char **grid) {
+char **new_words_list(int rc, int cc) {
 	char **words = NULL;
-	int rc = 0;
-	int cc = 0;
 	int words_count = 0;
 	int words_max_len = 0;
-
-	rc = get_grid_row_count(grid);
-	cc = get_grid_col_count(grid);
 
 	//get the maximum count of words present in a grid
 	words_count = rc + (cc / 2);
 
 	//get the maximum count of line a word can have
-	words_max_len = rc * 2;
-	if (rc < cc) {
-		words_max_len = cc;
-	}
+	words_max_len = MAX(rc * 2, cc);
 
 	if (!(words = (char**)malloc(sizeof(char*) * (words_count + 1)))) {
 		return (NULL);
@@ -203,7 +207,7 @@ char **new_words_list(char **grid) {
 	return (words);
 }
 
-char **get_vertical_words(char **grid) {
+char **get_vertical_words(char **grid, int rc, int cc) {
 	char **words = NULL;
 	char c;
 	int i, j;
@@ -214,7 +218,7 @@ char **get_vertical_words(char **grid) {
 		return (NULL);
 	}
 
-	if (!(words = new_words_list(grid))) {
+	if (!(words = new_words_list(rc, cc))) {
 		return (NULL);
 	}
 
@@ -243,7 +247,7 @@ char **get_vertical_words(char **grid) {
 }
 
 //returns word grid
-char **get_words(char **grid) {
+char **get_words_rc_cc(char **grid, int rc, int cc) {
 	char **words = NULL;
 	char c;
 	int i, j;
@@ -254,18 +258,18 @@ char **get_words(char **grid) {
 		return (NULL);
 	}
 
-	if (!(words = new_words_list(grid))) {
+	if (!(words = new_words_list(rc, cc))) {
 		return (NULL);
 	}
 
 	//Get horizontal words
 	i = -1;
 	k = -1;
-	while (grid[++i]) {
+	while (++i < rc) {
 		++k;
 		l = -1;
 		j = -1;
-		while (grid[i][++j]) {
+		while (++j < cc) {
 			j = get_next_letter_in_row(grid, i, j);
 			if ((c = grid[i][j]) != -1) {
 				words[k][++l] = c;
@@ -298,8 +302,34 @@ char **get_words(char **grid) {
 	return (words);
 }
 
+
+//returns word grid
+char **get_words(char **grid) {
+	int rc, cc;
+
+	if (!grid) {
+		return (NULL);
+	}
+
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+
+	return (get_words_rc_cc(grid, rc, cc));
+}
+
 //returns 0 or failing line in case of failure
 int check_no_duplicated_words(char **grid) {
+	int rc, cc;
+
+	rc = get_grid_row_count(grid);
+	cc = get_grid_col_count(grid);
+
+	return (check_no_duplicated_words_rc_cc(grid, rc, cc));
+}
+
+
+//returns 0 or failing line in case of failure
+int check_no_duplicated_words_rc_cc(char **grid, int rc, int cc) {
 	char **words = NULL;
 	int i, j;
 
@@ -307,7 +337,7 @@ int check_no_duplicated_words(char **grid) {
 		return (0);
 	}
 
-	if (!(words = get_words(grid))) {
+	if (!(words = get_words_rc_cc(grid, rc, cc))) {
 		printf("Error: could not allocate words\n");
 		return (0);
 	}
@@ -330,7 +360,7 @@ int check_no_duplicated_words(char **grid) {
 }
 
 //returns 0 or failing line in case of failure
-int check_words_belong_to_dictionnary(char **grid, t_dict dict) {
+int check_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc) {
 	char **words = NULL;
 	int i;
 
@@ -338,7 +368,7 @@ int check_words_belong_to_dictionnary(char **grid, t_dict dict) {
 		return (-1);
 	}
 
-	if (!(words = get_words(grid))) {
+	if (!(words = get_words_rc_cc(grid, rc, cc))) {
 		printf("Error: could not allocate words\n");
 		return (-1);
 	}

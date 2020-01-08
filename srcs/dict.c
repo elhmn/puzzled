@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Tue Jan 07 01:28:31 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 14:46:23 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ void dump_dict(t_dict dict) {
 	printf("\tdict->minlen: %d\n", dict.minlen);
 	printf("\tdict->index: {\n");
 	for (int i = 0; i < INDEX_SIZE; i++) {
-		printf("\t\t%c:%d:[%s]", (i + (int)'a'), dict.index[i], dict.words[dict.index[i]]);
+		if (dict.index[i] >= 0) {
+			printf("\t\t%c:%d:[%s]", (i + (int)'a'), dict.index[i], dict.words[dict.index[i]]);
+		} else {
+			printf("\t\t%c:%d:[(null)]", (i + (int)'a'), dict.index[i]);
+		}
 		if (i != INDEX_SIZE - 1) {
 			printf(",\n");
 		}
@@ -147,10 +151,9 @@ char **new_dict_word_list(t_dict dict, char **words) {
 		return (NULL);
 	}
 
-	if (!(new_words = (char**)malloc(sizeof(char*) * (dict.wcount + 1)))) {
+	if (!(new_words = (char**)calloc(dict.wcount + 1, sizeof(char*)))) {
 		return (NULL);
 	}
-	new_words[dict.wcount] = NULL;
 
 	return (new_words);
 }
@@ -197,7 +200,7 @@ void init_index(t_dict *dict) {
 		}
 
 		for (int i = 0; i < dict->wcount && dict->index[25] == -1; i++) {
-			if (dict->index[dict->words[i][0] % 'a'] == -1) {
+			if (dict->words[i] && dict->index[dict->words[i][0] % 'a'] == -1) {
 				dict->index[dict->words[i][0] % 'a'] = i;
 			}
 		}
@@ -249,28 +252,24 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 	init_index(dict);
 
 	dict->comb = new_word_combination_list(*dict);
-	if (!(dict->comb_count = (int*)malloc(sizeof(int) * dict->wcount))) {
+	if (!(dict->comb_count = (int*)calloc(dict->wcount, sizeof(int)))) {
 		return (-1);
 	}
 
-	if (!(dict->placed_w = (int*)malloc(sizeof(int) * n * 2))) {
+	if (!(dict->placed_w = (int*)calloc(m, sizeof(int)))) {
 		return (-1);
 	}
-	for (int i = 0; i < n * 2; i++) {
+	for (int i = 0; i < m; i++) {
 		dict->placed_w[i] = -1;
 	}
-
 	return (0);
 }
 
 char ***new_word_combination_list(t_dict dict) {
 	char ***comb = NULL;
 
-	if (!(comb = (char***)malloc(sizeof(char**) * (dict.wcount + 1)))) {
+	if (!(comb = (char***)calloc(dict.wcount + 1, sizeof(char**)))) {
 		return (NULL);
-	}
-	for (int i = 0; i <= dict.wcount; i++) {
-		comb[i] = NULL;
 	}
 	return (comb);
 }

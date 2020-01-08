@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Tue Jan 07 03:14:27 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 14:43:42 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -17,24 +17,23 @@
 #include "color.h"
 #include "puzzled.h"
 
-int grid_correct(char **grid, t_dict dict) {
+int grid_correct(char **grid, t_dict dict, int rc, int cc) {
 	int row;
 
-	(void)dict;
 	if (!grid) {
 		return (-1);
 	}
 
-	if ((row = check_at_least_one_blank(grid)) >= 0) {
+	if ((row = check_at_least_one_blank_rc_cc(grid, rc, cc)) >= 0) {
 		return (-2);
 	}
-	else if ((row = check_row_and_col_filled_at_50_per_cent(grid)) >= 0) {
+	if ((row = check_row_and_col_filled_at_50_per_cent_rc_cc(grid, rc, cc)) >= 0) {
 		return (-3);
 	}
-	else if ((row = check_no_duplicated_words(grid)) >= 0) {
+	if ((row = check_no_duplicated_words_rc_cc(grid, rc, cc)) >= 0) {
 		return (-4);
 	}
-	else if ((row = check_words_belong_to_dictionnary(grid, dict)) >= 0) {
+	if ((row = check_words_belong_to_dictionnary(grid, dict, rc, cc)) >= 0) {
 		return (-5);
 	}
 
@@ -89,21 +88,6 @@ int was_placed(int *placed, int len, int w_i) {
 	return (-1);
 }
 
-int get_next_word_index(t_dict *dict, int w_i, int rc, int cc) {
-	int i, wcount;
-
-	i = 0;
-	wcount = dict->wcount;
-	while (i <= wcount) {
-		if (was_placed(dict->placed_w, rc, i) < 0 && w_i != i) {
-			return (i);
-		}
-		i++;
-	}
-	(void)cc;
-	return w_i;
-}
-
 int find_word(char *str, char *to_search) {
 	regex_t regex;
 	int reti;
@@ -134,7 +118,7 @@ int find_word(char *str, char *to_search) {
 	return (0);
 }
 
-int has_valid_col(t_dict *dict, char **grid) {
+int has_valid_col(t_dict *dict, char **grid, int rc, int cc) {
        char **words;
        int wcount;
        int idx_start, idx_end;
@@ -143,7 +127,7 @@ int has_valid_col(t_dict *dict, char **grid) {
                return (-1);
        }
 
-       if (!(words = get_vertical_words(grid))) {
+       if (!(words = get_vertical_words(grid, rc, cc))) {
                return (-1);
        }
 
@@ -173,16 +157,12 @@ int has_valid_col(t_dict *dict, char **grid) {
 }
 
 void backtracking(t_dict *dict, char **grid,
-		int rc, int cc, int i, int w_i, int comb_i) {
+		int rc, int cc, int i) {
 	char *tmp = NULL;
 	char **words = NULL;
 
-	printf("\n"); // Debug
-	show_grid(grid); // Debug
-	printf("\n"); // Debug
-
 	if (i >= rc) {
-		if (grid_correct(grid, *dict) >= 0) {
+		if (grid_correct(grid, *dict, rc, cc) >= 0) {
 			printf("Crossword generated:\n");
 			words = get_words(grid);
 			if (words) {
@@ -197,23 +177,26 @@ void backtracking(t_dict *dict, char **grid,
 			char buf[4];
 			printf("Continue ? (y/n)\n");
 			scanf("%s", buf);
+			printf("Searching for other crossword...\n");
 		}
 		return;
 	}
 
-	(void)w_i;
-	(void)comb_i;
 	for (int w = 0; w < dict->wcount; w++) {
+
+		if (!dict->comb[w]) {
+			continue;
+		}
+
 		if (was_placed(dict->placed_w, rc, w) >= 0) {
 			continue;
 		}
 
 		for (int comb = 0; dict->comb[w][comb]; comb++) {
 			tmp = grid[i];
-
 			dict->placed_w[i] = w;
 			grid[i] = dict->comb[w][comb];
-			backtracking(dict, grid, rc, cc, i + 1, 0, 0);
+			backtracking(dict, grid, rc, cc, i + 1);
 			grid[i] = tmp;
 			dict->placed_w[i] = -1;
 		}
@@ -270,14 +253,25 @@ void gen_combinations(char **comb,
 	row[cur[0]] = word[cell * 2];
 	row[cur[1]] = word[cell * 2 + 1];
 
-	snapshot_1 = strdup(row);
-	snapshot_2 = strdup(row);
+	if (!(snapshot_1 = strdup(row))) {
+		printf("failed to allocate snapshot_1\n");
+		return ;
+	}
+	if (!(snapshot_2 = strdup(row))) {
+		printf("failed to allocate snapshot_2\n");
+		return ;
+	}
 
-	comb[*comb_count] = snapshot_1;
+	if (!(comb[*comb_count] = strdup(row))) {
+		printf("failed to allocate comb[]\n");
+		return ;
+	}
+
 	(*comb_count)++;
 	gen_combinations(comb, comb_count, word, wlen, cc, snapshot_1, cell, cell_pos + 2);
 	gen_combinations(comb, comb_count, word, wlen, cc, snapshot_2, cell - 1, cell * 2 - 2);
 
+	free(snapshot_1);
 	free(snapshot_2);
 	return;
 }
@@ -304,11 +298,15 @@ char **bruteforce(int m, int n, t_dict dict) {
 	char *word = NULL;
 	int wlen = 0;
 	unsigned int comb_count = 0;
-
+	unsigned int total_comb_count = 0;
+	printf("Generating every combinations...\n");
 	for (int i = 0; i < dict.wcount; i++) {
 		memset(row, EMPTY, n * 2);
 		word = dict.words[i];
 		wlen = strlen(word);
+		if (wlen > n * 2) {
+			continue;
+		}
 		strncpy(row, word, wlen);
 
 		//initialise list of combinations
@@ -327,10 +325,13 @@ char **bruteforce(int m, int n, t_dict dict) {
 		gen_combinations(dict.comb[i], &comb_count,
 				word, wlen, n * 2, row, (wlen - 1) / 2, wlen - 2);
 		dict.comb_count[i] = comb_count;
+		total_comb_count += comb_count;
 	}
 	free(row);
+	printf("%d combinations generated\n", total_comb_count);
+	printf("Bactracking is running...\n");
+	backtracking(&dict, grid, m, n * 2, 0);
+	printf("Bactracking is done\n");
 
-	backtracking(&dict, grid, m, n * 2, 0, 0, 0);
 	return (grid);
 }
-

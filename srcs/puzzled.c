@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Tue Jan 07 02:06:00 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 14:01:08 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ int puzzled(int m, int n, char *dict_file) {
 	}
 	printf("dictionnary initialised\n\n");
 
-	if (dict.maxlen < (m > n ? m : n)) {
+	if (dict.maxlen < MAX(m, n)) {
 		printf(COLOR_RED
 		"unable to create a grid : longest word (len = %d) in the dictionnary is smaller than max(m, n) \n"
 		COLOR_RESET, dict.maxlen);
-	} else if (dict.minlen / 2 >= ((m < n ? m : n) - 1) * 2) {
+	} else if (dict.minlen / 2 >= (MIN(m, n) - 1) * 2) {
 		printf(COLOR_RED
 		"unable to create a grid : shortest word (len = %d) in the dictionnary is smaller than 2 * (min(m, n) + 1) \n"
 		COLOR_RESET, dict.minlen);

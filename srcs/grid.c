@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Mon Jan 06 16:50:16 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 12:35:55 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ char **set_grid(char *src, unsigned int size) {
 		return (NULL);
 	}
 
-	if (!(grid = (char**)malloc(sizeof(char*) * (size + 1)))) {
+	if (!(grid = (char**)calloc(size + 1, sizeof(char*)))) {
 		return (NULL);
 	}
-	*(grid + size) = NULL;
+	grid[size] = NULL;
 
 	int i = 0;
-	*(grid + i) = strtok(src, "\n");
-	while (*(grid + i++)) {
-		*(grid + i) = strtok(NULL, "\n");
+	grid[i] = strtok(src, "\n");
+	while (grid[i++]) {
+		grid[i] = strtok(NULL, "\n");
 	}
 	return (grid);
 }
@@ -79,16 +79,19 @@ void show_grid(char** grid) {
 }
 
 int free_grid(char ***grid) {
+	int i = -1;
+
 	if (!grid || !*grid) {
 		return (-1);
 	}
 
-	for (int i = 0; grid[0][i]; i++) {
+	while (grid[0][++i]) {
 		free(grid[0][i]);
+		grid[0][i] = NULL;
 	}
 
-	free(*grid);
-	*grid = NULL;
+	free(grid[0]);
+	grid[0] = NULL;
 	return (0);
 }
 
