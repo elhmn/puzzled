@@ -6,7 +6,7 @@
 #             <nleme@live.fr>                                                #
 #                                                                            #
 #   Created: Wed Dec 11 16:02:52 2019                        by elhmn        #
-#   Updated: Thu Jan 09 16:30:07 2020                        by bmbarga      #
+#   Updated: Thu Jan 09 16:54:59 2020                        by bmbarga      #
 #                                                                            #
 # ************************************************************************** #
 
@@ -58,8 +58,11 @@ $(OBJS): $(SRCS)
 	$(CC) $(DEBUG_FLAG) $(FLAGS) $(SANITIZE) $(INC) -c $(SRCS)
 	mv $(OBJ) $(OBJDIR)
 
-test: $(NAME)
+testwrong: $(NAME)
 	@./scripts/test_wrong.sh
+
+testgen: $(NAME)
+	@./scripts/test_gen.sh
 
 clean:
 	rm -rf $(OBJS)
