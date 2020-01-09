@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 14:59:54 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 15:45:11 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -18,6 +18,7 @@
 #include "puzzled.h"
 
 extern int g_interactive;
+extern unsigned int g_limit;
 
 int grid_correct(char **grid, t_dict dict, int rc, int cc) {
 	int row;
@@ -148,62 +149,6 @@ int has_valid_col(t_dict *dict, char **grid, int rc, int cc) {
     return (0);
 }
 
-void backtracking(t_dict *dict, char **grid,
-		int rc, int cc, int i) {
-	char *tmp = NULL;
-	char **words = NULL;
-
-	if (i >= rc) {
-		if (grid_correct(grid, *dict, rc, cc) >= 0) {
-			printf("Crossword generated:\n");
-			words = get_words(grid);
-			if (words) {
-				show_grid(words);
-				free_grid(&words);
-				printf("\n");
-			}
-			if (g_interactive) {
-				char buf[4];
-				printf("Continue ? (y/n)\n");
-				scanf("%s", buf);
-				if (!strcmp(buf, "n")) {
-					exit(0);
-				}
-			}
-			printf("\n");
-			show_grid(grid);
-			printf("\n");
-
-			printf("Searching for other crossword...\n");
-		}
-		return;
-	}
-
-	if (i > 1 && has_valid_col(dict, grid, rc, cc) < 0) {
-		return ;
-	}
-
-	for (int w = 0; w < dict->wcount; w++) {
-
-		if (!dict->comb[w]) {
-			continue;
-		}
-
-		if (was_placed(dict->placed_w, rc, w) >= 0) {
-			continue;
-		}
-
-		for (int comb = 0; dict->comb[w][comb]; comb++) {
-			tmp = grid[i];
-			dict->placed_w[i] = w;
-			grid[i] = dict->comb[w][comb];
-			backtracking(dict, grid, rc, cc, i + 1);
-			grid[i] = tmp;
-			dict->placed_w[i] = -1;
-		}
-	}
-	return ;
-}
 
 long double factorial(long double n) {
 	if (!n) {
@@ -277,10 +222,80 @@ void gen_combinations(char **comb,
 	return;
 }
 
+void backtracking(t_dict *dict, char **grid,
+		int rc, int cc, int i, unsigned int *gcount) {
+	char *tmp = NULL;
+	char **words = NULL;
+
+	if (i >= rc) {
+		if (grid_correct(grid, *dict, rc, cc) >= 0) {
+			printf("Crossword generated:\n");
+			words = get_words(grid);
+			*gcount += 1;
+			if (words) {
+				show_grid(words);
+				free_grid(&words);
+				printf("\n");
+			}
+			printf("\n");
+			show_grid(grid);
+			printf("\n");
+
+			if (g_interactive) {
+				char buf[4];
+				printf("Continue ? (y/n)\n");
+				scanf("%s", buf);
+				if (!strcmp(buf, "n")) {
+					exit(0);
+				}
+			} else {
+				if (g_limit != 0 && *gcount >= g_limit) {
+					printf("%d crosswords were genereated\n", *gcount);
+					exit(0);
+				}
+			}
+
+			printf("Searching for other crossword...\n");
+		}
+		return;
+	}
+
+	if (i > 1 && has_valid_col(dict, grid, rc, cc) < 0) {
+		return ;
+	}
+
+	for (int w = 0; w < dict->wcount; w++) {
+
+		if (!dict->comb[w]) {
+			continue;
+		}
+
+		if (was_placed(dict->placed_w, rc, w) >= 0) {
+			continue;
+		}
+
+		for (int comb = 0; dict->comb[w][comb]; comb++) {
+			tmp = grid[i];
+			dict->placed_w[i] = w;
+			grid[i] = dict->comb[w][comb];
+			backtracking(dict, grid, rc, cc, i + 1, gcount);
+			grid[i] = tmp;
+			dict->placed_w[i] = -1;
+		}
+	}
+	return ;
+}
+
+
 char **bruteforce(int m, int n, t_dict dict) {
-	char	**grid = NULL;
-	char	**dwords = NULL;
-	char	*row = NULL;
+	char **grid = NULL;
+	char **dwords = NULL;
+	char *row = NULL;
+	char *word = NULL;
+	int wlen = 0;
+	unsigned int comb_count = 0;
+	unsigned int total_comb_count = 0;
+	unsigned int gcount = 0;
 
 	if (!(grid = new_grid_uni_dimension(m))) {
 		printf(COLOR_RED
@@ -296,10 +311,6 @@ char **bruteforce(int m, int n, t_dict dict) {
 	}
 	row[n * 2] = '\0';
 
-	char *word = NULL;
-	int wlen = 0;
-	unsigned int comb_count = 0;
-	unsigned int total_comb_count = 0;
 	printf("Generating every combinations...\n");
 	for (int i = 0; i < dict.wcount; i++) {
 		memset(row, EMPTY, n * 2);
@@ -331,7 +342,7 @@ char **bruteforce(int m, int n, t_dict dict) {
 	free(row);
 	printf("%d combinations generated\n", total_comb_count);
 	printf("Bactracking is running...\n");
-	backtracking(&dict, grid, m, n * 2, 0);
+	backtracking(&dict, grid, m, n * 2, 0, &gcount);
 	printf("Bactracking is done\n");
 
 	return (grid);
