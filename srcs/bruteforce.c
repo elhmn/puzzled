@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 13:50:04 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 14:59:54 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -16,6 +16,8 @@
 #include "grid.h"
 #include "color.h"
 #include "puzzled.h"
+
+extern int g_interactive;
 
 int grid_correct(char **grid, t_dict dict, int rc, int cc) {
 	int row;
@@ -160,15 +162,18 @@ void backtracking(t_dict *dict, char **grid,
 				free_grid(&words);
 				printf("\n");
 			}
+			if (g_interactive) {
+				char buf[4];
+				printf("Continue ? (y/n)\n");
+				scanf("%s", buf);
+				if (!strcmp(buf, "n")) {
+					exit(0);
+				}
+			}
 			printf("\n");
 			show_grid(grid);
 			printf("\n");
-			char buf[4];
-			printf("Continue ? (y/n)\n");
-			scanf("%s", buf);
-			if (!strcmp(buf, "n")) {
-				exit(0);
-			}
+
 			printf("Searching for other crossword...\n");
 		}
 		return;
