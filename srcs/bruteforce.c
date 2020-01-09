@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 12:27:38 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 13:50:04 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -166,6 +166,9 @@ void backtracking(t_dict *dict, char **grid,
 			char buf[4];
 			printf("Continue ? (y/n)\n");
 			scanf("%s", buf);
+			if (!strcmp(buf, "n")) {
+				exit(0);
+			}
 			printf("Searching for other crossword...\n");
 		}
 		return;
