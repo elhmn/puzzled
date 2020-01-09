@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 17:57:45 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 12:26:04 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dict.h"
+#include "libft.h"
 #include "grid.h"
 
 void dump_dict(t_dict dict) {
@@ -72,7 +73,7 @@ int has_valid_char(char *word) {
 	for (int i = 0; i < len; i++) {
 		c = word[i];
 		if (!((c >= 'a' && c <= 'z')
-			|| (c >= 'A' && c <= 'Z'))) {
+					|| (c >= 'A' && c <= 'Z'))) {
 			return (-1);
 		}
 	}
@@ -144,6 +145,28 @@ int search_word(t_dict *dict, char *word) {
 	return (-1);
 }
 
+int search_word_hash(t_hash *hash, char *word) {
+	t_list *l;
+	char *str;
+
+	if (hash && word) {
+		l = ft_hash_get_node(hash, (unsigned char*)word);
+
+		if (!l) {
+			return (-1);
+		}
+
+		while (l) {
+			str = (char*)l->content;
+			if (!strcmp(str, word)) {
+				return (0);
+			}
+			l = l->next;
+		}
+	}
+	return (-1);
+}
+
 char **new_dict_word_list(t_dict dict, char **words) {
 	char **new_words = NULL;
 
@@ -194,12 +217,15 @@ char **get_new_dict_words(int m, int n, t_dict dict, char **words, int line_coun
 }
 
 void init_index(t_dict *dict) {
+	int wcount;
+
 	if (dict) {
+		wcount = dict->wcount;
 		for (int i = 0; i < INDEX_SIZE; i++) {
 			dict->index[i] = -1;
 		}
 
-		for (int i = 0; i < dict->wcount && dict->index[25] == -1; i++) {
+		for (int i = 0; i < wcount && dict->index[25] == -1; i++) {
 			if (dict->words[i] && dict->index[dict->words[i][0] % 'a'] == -1) {
 				dict->index[dict->words[i][0] % 'a'] = i;
 			}
@@ -207,15 +233,75 @@ void init_index(t_dict *dict) {
 	}
 }
 
-t_hash *get_new_hash(t_dict dict) {
+t_hash *get_new_dict_hash(t_dict dict) {
 	t_hash *h;
+	int wcount;
 
-	(void)dict;
-	if (!(h = ft_new_hash_table(HASHTABLE_SIZE))) {
+	if (!(h = ft_new_hash_table(MAX_HASHTABLE_SIZE))) {
 		return (NULL);
 	}
-
+	wcount = dict.wcount;
+	for (int i = 0; i < wcount; i++) {
+		ft_hash_insert(h, (unsigned char*)dict.words[i], dict.words[i], 0);
+	}
 	return (h);
+}
+
+t_hash *get_new_col_hash(t_dict dict) {
+	t_hash *h;
+	int wcount;
+	char *word;
+	char *tmp;
+	int wlen;
+
+	if (!(h = ft_new_hash_table(MAX_HASHTABLE_SIZE))) {
+		return (NULL);
+	}
+	wcount = dict.wcount;
+	for (int i = 0; i < wcount; i++) {
+		word = dict.words[i];
+		wlen = strlen(word);
+		for (int j = 0; j < wlen; j += 2) {
+			tmp = strndup(word, j + 2);
+			if (ft_hash_insert_without_duplicate(h, (unsigned char*)tmp, tmp, 0) < 0) {
+				free(tmp);
+			}
+		}
+	}
+	return (h);
+}
+
+
+void	dump_hash(t_hash *h) {
+	t_list **t;
+	int size;
+	t_list *l;
+	char *str;
+
+	if (!h) {
+		return ;
+	}
+
+	t = h->table;
+	size = h->size;
+	printf("size = %d\n", size);
+	for (int i = 0; i < size; i++) {
+		l = t[i];
+
+		if (!l) {
+			continue;
+		}
+
+		printf("t[%d] => {\n", i);
+		while (l) {
+			str = (char*)l->content;
+			if (str) {
+				printf("\t%s\n", str);
+			}
+			l = l->next;
+		}
+		printf("}\n");
+	}
 }
 
 int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
@@ -274,7 +360,8 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 		dict->placed_w[i] = -1;
 	}
 
-	dict->hash = get_new_hash(*dict);
+	dict->d_hash = get_new_dict_hash(*dict);
+	dict->col_hash = get_new_col_hash(*dict);
 	return (0);
 }
 

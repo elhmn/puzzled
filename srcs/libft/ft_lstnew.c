@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Jan  8 16:08:31 2020                        by elhmn        */
-/*   Updated: Wed Jan 08 16:09:04 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 08:43:16 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,11 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 
 	new = malloc(sizeof(t_list));
 	if (!new)
-		return (0);
+		return (NULL);
 	if (content)
 	{
-		new->content = malloc(content_size);
-		if (!new->content)
-			return (0);
+		new->content = (void*)content;
 		new->content_size = content_size;
-		memcpy(new->content, content, content_size);
 	}
 	else
 	{

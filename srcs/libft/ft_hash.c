@@ -6,12 +6,13 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Jan  8 17:29:49 2020                        by elhmn        */
-/*   Updated: Wed Jan 08 17:34:48 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 12:13:57 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 t_hash		*ft_new_hash_table(size_t size) {
 	t_hash *hash;
@@ -24,7 +25,7 @@ t_hash		*ft_new_hash_table(size_t size) {
 	if (!(hash->table = (t_list**)calloc(size, sizeof(t_list*)))) {
 		return (NULL);
 	}
-	return (NULL);
+	return (hash);
 }
 
 //djb2 hash function
@@ -32,7 +33,7 @@ unsigned long ft_hash(unsigned char *str) {
     unsigned long hash = 5381;
     int c;
 
-	if (str) {
+	if (!str) {
 		return (0);
 	}
 
@@ -42,7 +43,7 @@ unsigned long ft_hash(unsigned char *str) {
     return hash;
 }
 
-void	ft_hash_insert(t_hash *h, unsigned char *str, void const *content) {
+void	ft_hash_insert(t_hash *h, unsigned char *str, void const *content, int size) {
 	t_list *list = NULL;
 	int key = -1;
 
@@ -54,18 +55,62 @@ void	ft_hash_insert(t_hash *h, unsigned char *str, void const *content) {
 	}
 
 	if (h->table) {
-		key = ft_hash(str);
+		key = ft_hash(str) % (unsigned long)h->size;
 		list = h->table[key];
 		if (!list) {
-			h->table[key] = ft_lstnew(content, 2);
+			h->table[key] = ft_lstnew(content, size);
 		} else {
-			ft_lstadd_end(&list, ft_lstnew(content, 2));
+			ft_lstadd_end(&list, ft_lstnew(content, size));
 		}
 	}
 }
 
-t_list *hash_get_node(t_hash *h, unsigned char *str) {
-	if (h) {
+int	ft_hash_insert_without_duplicate(t_hash *h, unsigned char *str, void const *content, int size) {
+	t_list *list = NULL;
+	t_list *list_tmp;
+	char *content_str;
+
+	int key;
+
+	if (!h) {
+		return (-1);
+	}
+	if (!str) {
+		return (-1);
+	}
+
+	if (h->table) {
+		key = ft_hash(str) % (unsigned long)h->size;
+		list = h->table[key];
+
+		if (!list) {
+			h->table[key] = ft_lstnew(content, size);
+		} else {
+			list_tmp = list;
+
+			if (list)
+			{
+				while (list_tmp->next) {
+					if ((content_str = (char*)list_tmp->content) && !strcmp(content_str, (char*)str)) {
+						return (-1);
+					}
+					list_tmp = list_tmp->next;
+				}
+				if ((content_str = (char*)list_tmp->content) && !strcmp(content_str, (char*)str)) {
+					return (-1);
+				}
+				h->table[key] = list_tmp;
+				(list)->next = ft_lstnew(content, size);
+			}
+		}
+	}
+	return (0);
+}
+
+t_list *ft_hash_get_node(t_hash *h, unsigned char *str) {
+	int key;
+
+	if (!h) {
 		return (NULL);
 	}
 
@@ -73,9 +118,9 @@ t_list *hash_get_node(t_hash *h, unsigned char *str) {
 		return (NULL);
 	}
 
-	if (!h->table) {
+	if (!(h->table)) {
 		return (NULL);
 	}
-
-	return (h->table[ft_hash(str)]);
+	key = ft_hash(str) % (unsigned long)h->size;
+	return (h->table[key]);
 }

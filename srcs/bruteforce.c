@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 17:14:35 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 12:27:38 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -119,41 +119,31 @@ int find_word(char *str, char *to_search) {
 }
 
 int has_valid_col(t_dict *dict, char **grid, int rc, int cc) {
-       char **words;
-       int wcount;
-       int idx_start, idx_end;
+    char **words;
+    int wcount;
 
-       if (!dict || !grid) {
-               return (-1);
-       }
+    if (!dict || !grid) {
+        return (-1);
+    }
 
-       if (!(words = get_vertical_words(grid, rc, cc))) {
-               return (-1);
-       }
+    if (!(words = get_vertical_words(grid, rc, cc))) {
+        return (-1);
+    }
 
-       wcount = get_grid_row_count(words);
+    wcount = get_grid_row_count(words);
+    for (int i = 0; i < wcount; i++) {
+    	if (!words[i] || !strcmp(words[i], "")) {
+    		continue;
+    	}
 
-       for (int i = 0; i < wcount; i++) {
-               if ((idx_start = get_start_index(dict, words[i])) < 0) {
-                       continue ;
-               }
-               if ((idx_end = get_end_index(dict, words[i])) < 0) {
-                       continue ;
-               }
-               if (strlen(words[i]) <= 0) {
-                       continue ;
-               }
+        if (search_word_hash(dict->col_hash, words[i]) < 0) {
+            free_grid(&words);
+            return (-1);
+        }
+    }
 
-               for (int j = idx_start; j < idx_end; j++) {
-                       if (find_word(words[i], dict->words[j]) >= 0) {
-                               free_grid(&words);
-                               return (0);
-                       }
-               }
-       }
-
-       free_grid(&words);
-       return (-1);
+    free_grid(&words);
+    return (0);
 }
 
 void backtracking(t_dict *dict, char **grid,
@@ -173,13 +163,16 @@ void backtracking(t_dict *dict, char **grid,
 			printf("\n");
 			show_grid(grid);
 			printf("\n");
-
 			char buf[4];
 			printf("Continue ? (y/n)\n");
 			scanf("%s", buf);
 			printf("Searching for other crossword...\n");
 		}
 		return;
+	}
+
+	if (i > 1 && has_valid_col(dict, grid, rc, cc) < 0) {
+		return ;
 	}
 
 	for (int w = 0; w < dict->wcount; w++) {

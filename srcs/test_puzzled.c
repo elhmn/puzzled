@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 12:35:07 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 13:33:34 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,13 +192,13 @@ char **new_words_list(int rc, int cc) {
 	//get the maximum count of line a word can have
 	words_max_len = MAX(rc * 2, cc);
 
-	if (!(words = (char**)malloc(sizeof(char*) * (words_count + 1)))) {
+	if (!(words = (char**)calloc((words_count + 1), sizeof(char*)))) {
 		return (NULL);
 	}
 	words[words_count] = NULL;
 
 	for (int i = 0; i < words_count; i++) {
-		if (!(words[i] = (char*)malloc(sizeof(char) * (words_max_len + 1)))) {
+		if (!(words[i] = (char*)calloc((words_max_len + 1), sizeof(char)))) {
 			return (NULL);
 		}
 		words[i][words_max_len] = '\0';
@@ -375,7 +375,7 @@ int check_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc) 
 
 	i = -1;
 	while (words[++i]) {
-		if (search_word(&dict, words[i]) < 0) {
+		if (search_word_hash(dict.d_hash, words[i]) < 0) {
 			free_grid(&words);
 			return (0);
 		}

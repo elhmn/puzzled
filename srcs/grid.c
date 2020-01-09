@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 12:35:55 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 11:04:34 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,11 +143,8 @@ char **new_grid(int rc, int cc) {
 char **new_grid_uni_dimension(int rc) {
 	char **grid;
 
-	if (!(grid = (char**)malloc(sizeof(char*) * (rc + 1)))) {
+	if (!(grid = (char**)calloc(rc + 1, sizeof(char*)))) {
 		return (NULL);
-	}
-	for (int i = 0; i <= rc; i++) {
-		grid[i] = NULL;
 	}
 	return (grid);
 }

@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 14:01:08 2020                        by bmbarga      */
+/*   Updated: Wed Jan 08 14:01:12 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,5 @@ int puzzled(int m, int n, char *dict_file) {
 	free_dict(&dict);
 	free(words);
 	free_grid(&cwgrid);
-
-	while (42) {;
-	}
 	return (0);
 }
