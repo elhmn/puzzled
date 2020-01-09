@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 11:04:34 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:25:11 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,18 @@ void show_grid(char** grid) {
 	for (int i = 0; grid[i]; i++) {
 		printf("%d-[%s]\n", i, grid[i]);
 	}
+}
+
+char *store_grid(char *buf, char** grid) {
+	if (!grid || !buf) {
+		return (NULL);
+	}
+
+	for (int i = 0; grid[i]; i++) {
+		strcat(buf, grid[i]);
+		strcat(buf, "\n");
+	}
+	return (buf);
 }
 
 int free_grid(char ***grid) {

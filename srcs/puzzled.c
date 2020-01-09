@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:16:42 2019                        by elhmn        */
-/*   Updated: Wed Jan 08 14:01:12 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:29:07 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int puzzled(int m, int n, char *dict_file) {
 
 	printf("\ninitaliase dictionnary...\n");
 
-	if (init_dict(m, n, words, line_count, &dict) == -1) {
+	if (init_dict(m, n, words, line_count, &dict, dict_file) == -1) {
 		printf(COLOR_RED
 		"failed to initalise dictionnary\n"
 		COLOR_RESET);

@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:03:10 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 15:45:35 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 15:53:17 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 int g_quiet = 0;
 int g_interactive = 0;
+int g_output = 0;
 unsigned int g_limit = 0;
 
 void print_usage(char *program) {
@@ -40,7 +41,7 @@ int		main(int ac, char** av) {
 	opterr = 0;
 
 	while (optind < ac) {
-		if ((c = getopt(ac, av, "M:N:d:t:qil:")) != -1) {
+		if ((c = getopt(ac, av, "M:N:d:t:qil:o")) != -1) {
 			switch (c) {
 				//Should run test puzzled
 				case 't' :
@@ -49,6 +50,9 @@ int		main(int ac, char** av) {
 				//Should run in interactive mode
 				case 'i' :
 					g_interactive = 1;
+					break;
+				case 'o' :
+					g_output = 1;
 					break;
 				case 'l' :
 					g_limit = atoi(optarg);

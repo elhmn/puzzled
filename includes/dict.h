@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Thu Jan 09 12:22:45 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:30:50 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define MAX_HASHTABLE_SIZE 10000000
 
 typedef struct	s_dict {
+	char 	*file;
 	int		maxlen; //lenght of the longest word in the dictionnary
 	int		minlen; //lenght of the shortest word in the dictionnary
 	int		wcount; //word count
@@ -33,7 +34,7 @@ typedef struct	s_dict {
 	t_hash	*col_hash; //hash table that contains every ordered of cell valid in a dictionnary
 }				t_dict;
 
-int init_dict(int m, int n, char **words, int line_count, t_dict *dict);
+int init_dict(int m, int n, char **words, int line_count, t_dict *dict, char *file);
 void dump_dict(t_dict dict);
 int free_dict(t_dict *dict);
 int search_word(t_dict *dict, char *word);

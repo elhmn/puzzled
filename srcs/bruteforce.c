@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 15:45:11 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:52:37 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -18,6 +18,7 @@
 #include "puzzled.h"
 
 extern int g_interactive;
+extern int g_output;
 extern unsigned int g_limit;
 
 int grid_correct(char **grid, t_dict dict, int rc, int cc) {
@@ -222,6 +223,40 @@ void gen_combinations(char **comb,
 	return;
 }
 
+char *format(char *filename) {
+	char *f;
+
+	if (!(f = filename)) {
+		return ("");
+	}
+	while (*f) {
+		if (*f == '/') {
+			*f = '_';
+		}
+		f++;
+	}
+	return (filename);
+}
+
+int save_crossword(t_dict dict, char **grid, int rc, int cc, unsigned int gcount) {
+	char *buf;
+	char file[300] = "";
+
+	if (!(buf = calloc(rc * (cc + 2), sizeof(char)))) {
+		return (-1);
+	}
+
+	sprintf(file, "%sgrid_%s_%d_%d_%d.gen", GENERATED_CW_FOLDER, format(dict.file), rc, cc, gcount);
+
+	store_grid(buf, grid);
+	if (putfile(file, buf) < 0) {
+		return (-1);
+	}
+
+	free(buf);
+	return (0);
+}
+
 void backtracking(t_dict *dict, char **grid,
 		int rc, int cc, int i, unsigned int *gcount) {
 	char *tmp = NULL;
@@ -249,6 +284,11 @@ void backtracking(t_dict *dict, char **grid,
 					exit(0);
 				}
 			} else {
+				if (g_output) {
+					save_crossword(*dict, grid, rc, cc, *gcount);
+					printf("crossword was saved\n");
+				}
+
 				if (g_limit != 0 && *gcount >= g_limit) {
 					printf("%d crosswords were genereated\n", *gcount);
 					exit(0);

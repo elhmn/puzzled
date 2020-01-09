@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Wed Jan 08 11:06:06 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:15:13 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 #define DICTIONNARY "/usr/share/dict/words"
 #define TESTDIR "./tests/"
+#define GENERATED_CW_FOLDER "./gen/"
 #define EMPTY '.'
 
 //MACROS
@@ -25,6 +26,7 @@
 
 int				puzzled(int m, int n, char *file);
 char			*getfile(char *dict_file);
+int				putfile(char *dict_file, char *str);
 int				test_puzzled(char *file);
 unsigned int	get_line_count(char *cword);
 char			**bruteforce(int m, int n, t_dict dict);

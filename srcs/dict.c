@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 12:26:04 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 16:42:43 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ void	dump_hash(t_hash *h) {
 	}
 }
 
-int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
+int init_dict(int m, int n, char **words, int line_count, t_dict *dict, char *file) {
 	int len;
 	int maxlen = 0;
 	int minlen = -1;
@@ -339,6 +339,7 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict) {
 		}
 	}
 
+	dict->file = strdup(file);
 	dict->ceven = ceven;
 	dict->wcount = wcount;
 	dict->maxlen = maxlen;
