@@ -146,7 +146,7 @@ For a grid of `m` and `n = 4` the possible combination of abac are:
 ```
 
 #### 3- Then run the bactracking
-It isn't that explanatory ?
+It isn't that self explanatory ?
 ```c
 void backtracking(t_dict *dict, char **grid,
 		int rc, int cc, int i, unsigned int *gcount) {
