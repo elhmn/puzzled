@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 13:33:34 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 23:34:01 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,36 @@ int check_at_least_one_blank_rc_cc(char **grid, int rc, int cc) {
 	return (-1);
 }
 
-//returns 0 or failing line in case of failure
-int check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
+
+int check_col_at_least_one_blank_rc_cc(char **grid, int rc, int cc) {
+	int	 found;
+	int i, j;
+
+	if (!grid) {
+		return (0);
+	}
+
+	//Check for at list one empty block in a column
+	i = 0;
+	for (j = 0; j < cc; j++) {
+		found = 0;
+
+		for (i = 0; i < rc; i++) {
+			if (grid[i][j] == EMPTY) {
+				found = 1;
+			}
+		}
+
+		if (!found) {
+			return (i + 1);
+		}
+	}
+
+	return (-1);
+}
+
+
+int check_row_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
 	int found;
 	int i, j;
 
@@ -134,8 +162,19 @@ int check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
 		}
 	}
 
-	//Check that the row is filled at more than 50%
-	i = 0;
+	return (-1);
+}
+
+
+int check_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
+	int found;
+	int i, j;
+
+	if (!grid) {
+		return (0);
+	}
+
+	//Check that the col is filled at more than 50%
 	for (j = 0; j < cc; j++) {
 		found = 0;
 
@@ -147,6 +186,21 @@ int check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
 		if (found > rc / 2) {
 			return (i + 1);
 		}
+	}
+
+	return (-1);
+}
+
+//returns 0 or failing line in case of failure
+int check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc) {
+	int ret;
+
+	if ((ret = check_row_filled_at_50_per_cent_rc_cc(grid, rc, cc)) >= 0) {
+		return (ret);
+	}
+
+	if ((ret = check_col_filled_at_50_per_cent_rc_cc(grid, rc, cc)) >= 0) {
+		return (ret);
 	}
 
 	return (-1);
@@ -376,6 +430,31 @@ int check_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc) 
 	i = -1;
 	while (words[++i]) {
 		if (search_word_hash(dict.d_hash, words[i]) < 0) {
+			free_grid(&words);
+			return (0);
+		}
+	}
+
+	free_grid(&words);
+	return (-1);
+}
+
+int check_vertical_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc) {
+	char **words = NULL;
+	int i;
+
+	if (!grid) {
+		return (-1);
+	}
+
+	if (!(words = get_vertical_words(grid, rc, cc))) {
+		printf("Error: could not allocate words\n");
+		return (-1);
+	}
+
+	i = -1;
+	while (words[++i]) {
+		if (strcmp(words[i], "") && search_word_hash(dict.d_hash, words[i]) < 0) {
 			free_grid(&words);
 			return (0);
 		}

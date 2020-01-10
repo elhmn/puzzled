@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Thu Jan 09 16:15:13 2020                        by bmbarga      */
+/*   Updated: Thu Jan 09 23:33:18 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,15 @@ unsigned int	get_line_count(char *cword);
 char			**bruteforce(int m, int n, t_dict dict);
 int				check_at_least_one_blank(char **grid);
 int				check_at_least_one_blank_rc_cc(char **grid, int rc, int cc);
+int				check_col_at_least_one_blank_rc_cc(char **grid, int rc, int cc);
 int				check_row_and_col_filled_at_50_per_cent(char **grid);
+int				check_row_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc);
+int				check_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc);
 int				check_row_and_col_filled_at_50_per_cent_rc_cc(char **grid, int rc, int cc);
 int 			check_no_duplicated_words(char **grid);
 int				check_no_duplicated_words_rc_cc(char **grid, int rc, int cc);
 int				check_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc);
+int				check_vertical_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc);
 char			**get_words(char **grid);
 char			**get_vertical_words(char **grid, int rc, int cc);
 

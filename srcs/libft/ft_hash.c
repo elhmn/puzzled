@@ -6,11 +6,12 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Jan  8 17:29:49 2020                        by elhmn        */
-/*   Updated: Thu Jan 09 12:13:57 2020                        by bmbarga      */
+/*   Updated: Fri Jan 10 00:50:28 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "dict.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -97,6 +98,48 @@ int	ft_hash_insert_without_duplicate(t_hash *h, unsigned char *str, void const *
 					list_tmp = list_tmp->next;
 				}
 				if ((content_str = (char*)list_tmp->content) && !strcmp(content_str, (char*)str)) {
+					return (-1);
+				}
+				h->table[key] = list_tmp;
+				(list)->next = ft_lstnew(content, size);
+			}
+		}
+	}
+	return (0);
+}
+
+int	ft_hash_insert_cell_without_duplicate(t_hash *h, unsigned char *str, void const *content, int size) {
+	t_list *list = NULL;
+	t_list *list_tmp;
+	t_cell *cell;
+
+	int key;
+
+	if (!h) {
+		return (-1);
+	}
+	if (!str) {
+		return (-1);
+	}
+
+	if (h->table) {
+		key = ft_hash(str) % (unsigned long)h->size;
+		list = h->table[key];
+
+		if (!list) {
+			h->table[key] = ft_lstnew(content, size);
+		} else {
+			list_tmp = list;
+
+			if (list)
+			{
+				while (list_tmp->next) {
+					if ((cell = (t_cell*)list_tmp->content) && cell && !strcmp(cell->cell, (char*)str)) {
+						return (-1);
+					}
+					list_tmp = list_tmp->next;
+				}
+				if ((cell = (t_cell*)list_tmp->content) && cell && !strcmp(cell->cell, (char*)str)) {
 					return (-1);
 				}
 				h->table[key] = list_tmp;

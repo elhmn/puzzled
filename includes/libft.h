@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Jan  8 16:07:33 2020                        by elhmn        */
-/*   Updated: Thu Jan 09 16:32:17 2020                        by bmbarga      */
+/*   Updated: Fri Jan 10 00:58:21 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ typedef struct		s_hash
 t_hash				*ft_new_hash_table(size_t size);
 t_list 				*ft_hash_get_node(t_hash *h, unsigned char *str);
 void				ft_hash_insert(t_hash *h, unsigned char *str, void const *content, int size);
-int				ft_hash_insert_without_duplicate(t_hash *h, unsigned char *str, void const *content, int size);
+int					ft_hash_insert_without_duplicate(t_hash *h, unsigned char *str, void const *content, int size);
+int					ft_hash_insert_cell_without_duplicate(t_hash *h, unsigned char *str, void const *content, int size);
 unsigned long	ft_hash(unsigned char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 16:52:37 2020                        by bmbarga      */
+/*   Updated: Fri Jan 10 01:48:14 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -24,23 +24,23 @@ extern unsigned int g_limit;
 int grid_correct(char **grid, t_dict dict, int rc, int cc) {
 	int row;
 
+	(void)dict;
 	if (!grid) {
 		return (-1);
 	}
 
-	if ((row = check_at_least_one_blank_rc_cc(grid, rc, cc)) >= 0) {
+	if ((row = check_col_at_least_one_blank_rc_cc(grid, rc, cc)) >= 0) {
 		return (-2);
 	}
-	if ((row = check_row_and_col_filled_at_50_per_cent_rc_cc(grid, rc, cc)) >= 0) {
+	if ((row = check_col_filled_at_50_per_cent_rc_cc(grid, rc, cc)) >= 0) {
 		return (-3);
 	}
 	if ((row = check_no_duplicated_words_rc_cc(grid, rc, cc)) >= 0) {
 		return (-4);
 	}
-	if ((row = check_words_belong_to_dictionnary(grid, dict, rc, cc)) >= 0) {
+	if ((row = check_vertical_words_belong_to_dictionnary(grid, dict, rc, cc)) >= 0) {
 		return (-5);
 	}
-
 	return (0);
 }
 
@@ -246,7 +246,7 @@ int save_crossword(t_dict dict, char **grid, int rc, int cc, unsigned int gcount
 		return (-1);
 	}
 
-	sprintf(file, "%sgrid_%s_%d_%d_%d.gen", GENERATED_CW_FOLDER, format(dict.file), rc, cc, gcount);
+	sprintf(file, "%sgrid_%s_%d_%d_%d.gen", GENERATED_CW_FOLDER, format(dict.file), rc, cc / 2, gcount);
 
 	store_grid(buf, grid);
 	if (putfile(file, buf) < 0) {
@@ -305,7 +305,6 @@ void backtracking(t_dict *dict, char **grid,
 	}
 
 	for (int w = 0; w < dict->wcount; w++) {
-
 		if (!dict->comb[w]) {
 			continue;
 		}
@@ -325,7 +324,6 @@ void backtracking(t_dict *dict, char **grid,
 	}
 	return ;
 }
-
 
 char **bruteforce(int m, int n, t_dict dict) {
 	char **grid = NULL;
@@ -353,12 +351,22 @@ char **bruteforce(int m, int n, t_dict dict) {
 
 	printf("Generating every combinations...\n");
 	for (int i = 0; i < dict.wcount; i++) {
-		memset(row, EMPTY, n * 2);
 		word = dict.words[i];
 		wlen = strlen(word);
-		if (wlen > n * 2) {
+
+		//do not create combinations for words that does not have
+		//more than half of n * 2
+		if (wlen < n) {
 			continue;
 		}
+
+		//do not create combinations for words that does not fit
+		if (wlen > (n - 1) * 2) {
+			continue;
+		}
+
+		memset(row, EMPTY, n * 2);
+
 		strncpy(row, word, wlen);
 
 		//initialise list of combinations

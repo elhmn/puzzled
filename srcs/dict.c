@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 14:12:36 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 16:42:43 2020                        by bmbarga      */
+/*   Updated: Fri Jan 10 01:49:08 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,15 @@ void dump_dict(t_dict dict) {
 	printf("\tdict->wcount: %d\n", dict.wcount);
 	printf("\tdict->maxlen: %d\n", dict.maxlen);
 	printf("\tdict->minlen: %d\n", dict.minlen);
-	printf("\tdict->index: {\n");
-	for (int i = 0; i < INDEX_SIZE; i++) {
-		if (dict.index[i] >= 0) {
-			printf("\t\t%c:%d:[%s]", (i + (int)'a'), dict.index[i], dict.words[dict.index[i]]);
-		} else {
-			printf("\t\t%c:%d:[(null)]", (i + (int)'a'), dict.index[i]);
-		}
-		if (i != INDEX_SIZE - 1) {
-			printf(",\n");
-		}
-	}
-	printf("\n\t}\n");
-
 	printf("}\n");
 }
 
-void dump_combinations(char ***comb) {
+void dump_combinations(char ***comb, int count) {
 	if (comb) {
-		for (int i = 0; comb[i]; i++) {
+		for (int i = 0; i < count; i++) {
+			if (!comb[i]) {
+				continue ;
+			}
 			printf("combinations[%d]\n", i);
 			show_grid(comb[i]);
 			printf("----\n");
@@ -167,6 +157,28 @@ int search_word_hash(t_hash *hash, char *word) {
 	return (-1);
 }
 
+t_cell *search_word_cell_hash(t_hash *hash, char *word) {
+	t_list *l;
+	t_cell *cell;
+
+	if (hash && word) {
+		l = ft_hash_get_node(hash, (unsigned char*)word);
+
+		if (!l) {
+			return (NULL);
+		}
+
+		while (l) {
+			cell = (t_cell*)l->content;
+			if (!strcmp(cell->cell, word)) {
+				return (cell);
+			}
+			l = l->next;
+		}
+	}
+	return (NULL);
+}
+
 char **new_dict_word_list(t_dict dict, char **words) {
 	char **new_words = NULL;
 
@@ -271,6 +283,46 @@ t_hash *get_new_col_hash(t_dict dict) {
 	return (h);
 }
 
+t_hash *get_new_cell_hash(t_dict dict) {
+	t_hash *h;
+	int wcount;
+	char *word;
+	char *tmp;
+	int wlen;
+	t_cell *cell;
+
+	if (!(h = ft_new_hash_table(MAX_HASHTABLE_SIZE))) {
+		return (NULL);
+	}
+	wcount = dict.wcount;
+	for (int i = 0; i < wcount; i++) {
+		word = dict.words[i];
+		wlen = strlen(word);
+		for (int j = 0; j < wlen; j += 2) {
+			tmp = strndup(word + j, 2);
+			if (!(cell = (t_cell*)malloc(sizeof(t_cell)))) {
+				return (NULL);
+			}
+			cell->cell = tmp;
+			cell->occ = 0;
+
+			if (!search_word_cell_hash(h, tmp)) {
+				for (int m = i; m < wcount; m++) {
+					for (int j = 0; j < wlen; j += 2) {
+						if (!strncmp(tmp, dict.words[m] + j, 2)) {
+							cell->occ++;
+						}
+					}
+				}
+			}
+
+			if (ft_hash_insert_cell_without_duplicate(h, (unsigned char*)tmp, cell, 0) < 0) {
+				free(tmp);
+			}
+		}
+	}
+	return (h);
+}
 
 void	dump_hash(t_hash *h) {
 	t_list **t;
@@ -297,6 +349,81 @@ void	dump_hash(t_hash *h) {
 			str = (char*)l->content;
 			if (str) {
 				printf("\t%s\n", str);
+			}
+			l = l->next;
+		}
+		printf("}\n");
+	}
+}
+
+int get_occ(t_dict *dict, char *str) {
+	t_hash *h;
+	char *tmp;
+	t_cell *cell;
+	int wlen;
+	int occ;
+
+	if (!dict) {
+		return (0);
+	}
+
+	wlen = strlen(str);
+	h = dict->cell_hash;
+	occ = 1;
+	for (int j = 0; j < wlen; j += 2) {
+		tmp = strndup(str + j, 2);
+		if (!(cell = search_word_cell_hash(h, tmp))) {
+			return (0);
+		}
+		occ += cell->occ;
+		free(tmp);
+	}
+	return (occ);
+}
+
+void sort_grid_by_occurences(t_dict *dict, char **grid) {
+	int len;
+	int i, j;
+	char *jtmp;
+	char *swap;
+
+	if (grid) {
+		len = get_grid_row_count(grid);
+		for (i = 1; i < len; i++) {
+			for (j = i; j > 0 && get_occ(dict, swap = grid[j - 1]) < get_occ(dict, jtmp = grid[j]); j--) {
+				grid[j] = swap;
+				grid[j - 1] = jtmp;
+			}
+		}
+	}
+}
+
+
+void	dump_cell_hash(t_hash *h) {
+	t_list **t;
+	int size;
+	t_list *l;
+	t_cell *cell;
+
+	if (!h) {
+		return ;
+	}
+
+	t = h->table;
+	size = h->size;
+	printf("size = %d\n", size);
+	for (int i = 0; i < size; i++) {
+		l = t[i];
+
+		if (!l) {
+			continue;
+		}
+
+		printf("t[%d] => {\n", i);
+		while (l) {
+			cell = (t_cell*)l->content;
+			if (cell) {
+				printf("\t(cell:[%s], occ:[%d])\n", cell->cell, cell->occ);
 			}
 			l = l->next;
 		}
@@ -346,7 +473,6 @@ int init_dict(int m, int n, char **words, int line_count, t_dict *dict, char *fi
 	dict->minlen = minlen;
 
 	dict->words = get_new_dict_words(m, n, *dict, words, line_count);
-	sort_grid_alphabetic(dict->words);
 	init_index(dict);
 
 	dict->comb = new_word_combination_list(*dict);
