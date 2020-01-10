@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Fri Jan 10 01:48:14 2020                        by bmbarga      */
+/*   Updated: Fri Jan 10 08:26:32 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -257,45 +257,109 @@ int save_crossword(t_dict dict, char **grid, int rc, int cc, unsigned int gcount
 	return (0);
 }
 
+void correct_grid_output(t_dict *dict, char **grid,
+		int rc, int cc, int i, unsigned int *gcount) {
+	char **words = NULL;
+
+	(void)i;
+
+	printf("Crossword generated:\n");
+	words = get_words(grid);
+	*gcount += 1;
+	if (words) {
+		show_grid(words);
+		free_grid(&words);
+		printf("\n");
+	}
+	printf("\n");
+	show_grid(grid);
+	printf("\n");
+
+	if (g_interactive) {
+		char buf[4];
+		printf("Continue ? (y/n)\n");
+		scanf("%s", buf);
+		if (!strcmp(buf, "n")) {
+			exit(0);
+		}
+	} else {
+		if (g_output) {
+			save_crossword(*dict, grid, rc, cc, *gcount);
+			printf("crossword was saved\n");
+		}
+
+		if (g_limit != 0 && *gcount >= g_limit) {
+			printf("%d crosswords were genereated\n", *gcount);
+			exit(0);
+		}
+	}
+
+	printf("Searching for other crossword...\n");
+}
+
+
+void set_grid_combinations(t_dict dict, int n) {
+	char *row = NULL;
+	char *word = NULL;
+	char **dwords = NULL;
+	int wlen = 0;
+	unsigned int comb_count = 0;
+	unsigned int total_comb_count = 0;
+
+	dwords = dict.words;
+	if (!(row = (char*)malloc(sizeof(char) * (n * 2 + 1)))) {
+		return ;
+	}
+	row[n * 2] = '\0';
+
+	printf("Generating every combinations...\n");
+	for (int i = 0; i < dict.wcount; i++) {
+		word = dict.words[i];
+		wlen = strlen(word);
+
+		//do not create combinations for words that does not have
+		//more than half of n * 2
+		if (wlen < n) {
+			continue;
+		}
+
+		//do not create combinations for words that does not fit
+		if (wlen > (n - 1) * 2) {
+			continue;
+		}
+
+		memset(row, EMPTY, n * 2);
+		strncpy(row, word, wlen);
+
+		//initialise list of combinations
+		if (dict.comb) {
+			comb_count = get_possible_combination_count(wlen, n * 2);
+			if (!(dict.comb[i] = (char**)malloc(sizeof(char*) * (comb_count + 1)))) {
+				return ;
+			}
+			for (unsigned int j = 0; j <= comb_count; j++) {
+				dict.comb[i][j] = NULL;
+			}
+			dict.comb[i][0] = strdup(row);
+		}
+
+		comb_count = 1;
+		gen_combinations(dict.comb[i], &comb_count,
+				word, wlen, n * 2, row, (wlen - 1) / 2, wlen - 2);
+		dict.comb_count[i] = comb_count;
+		total_comb_count += comb_count;
+	}
+	printf("%d combinations generated\n", total_comb_count);
+	free(row);
+}
+
 void backtracking(t_dict *dict, char **grid,
 		int rc, int cc, int i, unsigned int *gcount) {
 	char *tmp = NULL;
-	char **words = NULL;
 
 	if (i >= rc) {
 		if (grid_correct(grid, *dict, rc, cc) >= 0) {
-			printf("Crossword generated:\n");
-			words = get_words(grid);
-			*gcount += 1;
-			if (words) {
-				show_grid(words);
-				free_grid(&words);
-				printf("\n");
-			}
-			printf("\n");
-			show_grid(grid);
-			printf("\n");
-
-			if (g_interactive) {
-				char buf[4];
-				printf("Continue ? (y/n)\n");
-				scanf("%s", buf);
-				if (!strcmp(buf, "n")) {
-					exit(0);
-				}
-			} else {
-				if (g_output) {
-					save_crossword(*dict, grid, rc, cc, *gcount);
-					printf("crossword was saved\n");
-				}
-
-				if (g_limit != 0 && *gcount >= g_limit) {
-					printf("%d crosswords were genereated\n", *gcount);
-					exit(0);
-				}
-			}
-
-			printf("Searching for other crossword...\n");
+			correct_grid_output(dict, grid, rc, cc, i, gcount);
 		}
 		return;
 	}
@@ -327,12 +391,6 @@ void backtracking(t_dict *dict, char **grid,
 
 char **bruteforce(int m, int n, t_dict dict) {
 	char **grid = NULL;
-	char **dwords = NULL;
-	char *row = NULL;
-	char *word = NULL;
-	int wlen = 0;
-	unsigned int comb_count = 0;
-	unsigned int total_comb_count = 0;
 	unsigned int gcount = 0;
 
 	if (!(grid = new_grid_uni_dimension(m))) {
@@ -342,53 +400,7 @@ char **bruteforce(int m, int n, t_dict dict) {
 		return (NULL);
 	}
 
-	dwords = dict.words;
-
-	if (!(row = (char*)malloc(sizeof(char) * (n * 2 + 1)))) {
-		return (NULL);
-	}
-	row[n * 2] = '\0';
-
-	printf("Generating every combinations...\n");
-	for (int i = 0; i < dict.wcount; i++) {
-		word = dict.words[i];
-		wlen = strlen(word);
-
-		//do not create combinations for words that does not have
-		//more than half of n * 2
-		if (wlen < n) {
-			continue;
-		}
-
-		//do not create combinations for words that does not fit
-		if (wlen > (n - 1) * 2) {
-			continue;
-		}
-
-		memset(row, EMPTY, n * 2);
-
-		strncpy(row, word, wlen);
-
-		//initialise list of combinations
-		if (dict.comb) {
-			comb_count = get_possible_combination_count(wlen, n * 2);
-			if (!(dict.comb[i] = (char**)malloc(sizeof(char*) * (comb_count + 1)))) {
-				return (NULL);
-			}
-			for (unsigned int j = 0; j <= comb_count; j++) {
-				dict.comb[i][j] = NULL;
-			}
-			dict.comb[i][0] = strdup(row);
-		}
-
-		comb_count = 1;
-		gen_combinations(dict.comb[i], &comb_count,
-				word, wlen, n * 2, row, (wlen - 1) / 2, wlen - 2);
-		dict.comb_count[i] = comb_count;
-		total_comb_count += comb_count;
-	}
-	free(row);
-	printf("%d combinations generated\n", total_comb_count);
+	set_grid_combinations(dict, n);
 	printf("Bactracking is running...\n");
 	backtracking(&dict, grid, m, n * 2, 0, &gcount);
 	printf("Bactracking is done\n");
