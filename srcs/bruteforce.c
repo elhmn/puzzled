@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Sat Jan 11 10:08:14 2020                        by bmbarga      */
+/*   Updated: Sun Jan 12 17:59:33 2020                        by elhmn        */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -386,21 +386,37 @@ void backtracking(t_dict *dict, char **grid,
 	return ;
 }
 
-char **bruteforce(int m, int n, t_dict dict) {
+void bruteforce(int m, int n, t_dict dict) {
 	char **grid = NULL;
 	unsigned int gcount = 0;
 
+	printf("bruteforce is running...\n");
 	if (!(grid = new_grid_uni_dimension(m))) {
 		printf(COLOR_RED
 				"failed to initialise new crossword grid\n"
 				COLOR_RESET);
-		return (NULL);
+		return ;
 	}
 
 	set_grid_combinations(dict, n);
 	printf("Bactracking is running...\n");
 	backtracking(&dict, grid, m, n * 2, 0, &gcount);
 	printf("Bactracking is done\n");
+	printf("bruteforce done...\n\n");
 
-	return (grid);
+	free_grid(&grid);
+}
+
+void emcc_bruteforce(void* vbr) {
+	int n, m;
+	t_dict dict;
+	t_brute *br;
+	if (!(br = (t_brute*)vbr)) {
+		return;
+	}
+	n = br->n;
+	m = br->m;
+	dict = br->dict;
+
+	bruteforce(n, m, dict);
 }

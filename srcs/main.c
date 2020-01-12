@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Wed Dec 11 16:03:10 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 15:53:17 2020                        by bmbarga      */
+/*   Updated: Sun Jan 12 17:49:47 2020                        by elhmn        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,22 @@
 #include <unistd.h>
 #include "puzzled.h"
 
+#ifdef __EMSCRIPTEN__
+
+# include <SDL/SDL.h>
+# include <emscripten.h>
+
+#endif //__EMSCRIPTEN__
+
 int g_quiet = 0;
 int g_interactive = 0;
 int g_output = 0;
+
+#ifdef __EMSCRIPTEN__
+unsigned int g_limit = 10;
+#else
 unsigned int g_limit = 0;
+#endif //__EMSCRIPTEN__
 
 void print_usage(char *program) {
 	printf("Usage:\n%s -M nRows -N nColumns [-d dictionnaryFilePath]\n", program);
@@ -31,6 +43,15 @@ void print_usage(char *program) {
 	printf("-t [testFilePath] to test crossword:\n");
 	printf("\t%s -t [testFilePath]\n", program);
 }
+
+#ifdef __EMSCRIPTEN__
+
+int main(void) {
+	emcc_puzzled(4, 6, DICTIONNARY);
+	return (0);
+}
+
+#else //NOT __EMSCRIPTEN__
 
 int		main(int ac, char** av) {
 	char *dict_file = DICTIONNARY;
@@ -98,3 +119,4 @@ int		main(int ac, char** av) {
 
 	return (EXIT_SUCCESS);
 }
+#endif
