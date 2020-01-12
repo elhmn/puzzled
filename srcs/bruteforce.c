@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Tue Dec 24 15:44:04 2019                        by elhmn        */
-/*   Updated: Fri Jan 10 08:26:32 2020                        by bmbarga      */
+/*   Updated: Sat Jan 11 10:08:14 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -141,12 +141,10 @@ int has_valid_col(t_dict *dict, char **grid, int rc, int cc) {
     	}
 
         if (search_word_hash(dict->col_hash, words[i]) < 0) {
-            free_grid(&words);
             return (-1);
         }
     }
 
-    free_grid(&words);
     return (0);
 }
 
@@ -268,7 +266,6 @@ void correct_grid_output(t_dict *dict, char **grid,
 	*gcount += 1;
 	if (words) {
 		show_grid(words);
-		free_grid(&words);
 		printf("\n");
 	}
 	printf("\n");

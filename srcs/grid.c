@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Sat Dec 21 09:19:19 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 16:25:11 2020                        by bmbarga      */
+/*   Updated: Sat Jan 11 10:03:49 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void fill_grid(char **grid, char c) {
 	}
 }
 
-void fill_grid_row_col(char **grid, int rc, int cc, char c) {
+void fill_grid_rc_cc(char **grid, int rc, int cc, char c) {
 	if (grid) {
 		for (int i = 0; i < rc; i++) {
 			for (int j = 0; j < cc; j++) {
@@ -211,6 +211,6 @@ char **new_filled_grid(int rc, int cc, char c) {
 	if (!(grid = new_grid(rc, cc))) {
 		return (NULL);
 	}
-	fill_grid_row_col(grid, rc, cc, c);
+	fill_grid_rc_cc(grid, rc, cc, c);
 	return (grid);
 }

@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created: Mon Dec 16 16:01:37 2019                        by elhmn        */
-/*   Updated: Thu Jan 09 23:34:01 2020                        by bmbarga      */
+/*   Updated: Sat Jan 11 10:08:04 2020                        by bmbarga      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,20 @@
 #include "color.h"
 
 extern int g_quiet;//access_global
+
+//words globals
+char **g_words = NULL;
+int g_words_count = 0;
+int g_words_maxlen = 0;
+
+char **get_g_words(int rc, int cc) {
+	if (!g_words) {
+		g_words = new_words_list(rc, cc);
+	}
+	fill_grid_rc_cc(g_words, g_words_count, g_words_maxlen, '\0');
+	return (g_words);
+}
+
 
 //returns 0 or failing line in case of failure
 int check_row_size(char **grid) {
@@ -237,25 +251,23 @@ int get_next_letter_in_row(char **grid, int i, int j) {
 
 char **new_words_list(int rc, int cc) {
 	char **words = NULL;
-	int words_count = 0;
-	int words_max_len = 0;
 
 	//get the maximum count of words present in a grid
-	words_count = rc + (cc / 2);
+	g_words_count = rc + (cc / 2);
 
 	//get the maximum count of line a word can have
-	words_max_len = MAX(rc * 2, cc);
+	g_words_maxlen = MAX(rc * 2, cc);
 
-	if (!(words = (char**)calloc((words_count + 1), sizeof(char*)))) {
+	if (!(words = (char**)calloc((g_words_count + 1), sizeof(char*)))) {
 		return (NULL);
 	}
-	words[words_count] = NULL;
+	words[g_words_count] = NULL;
 
-	for (int i = 0; i < words_count; i++) {
-		if (!(words[i] = (char*)calloc((words_max_len + 1), sizeof(char)))) {
+	for (int i = 0; i < g_words_count; i++) {
+		if (!(words[i] = (char*)calloc((g_words_maxlen + 1), sizeof(char)))) {
 			return (NULL);
 		}
-		words[i][words_max_len] = '\0';
+		words[i][g_words_maxlen] = '\0';
 	}
 
 	return (words);
@@ -272,7 +284,7 @@ char **get_vertical_words(char **grid, int rc, int cc) {
 		return (NULL);
 	}
 
-	if (!(words = new_words_list(rc, cc))) {
+	if (!(words = get_g_words(rc, cc))) {
 		return (NULL);
 	}
 
@@ -312,7 +324,7 @@ char **get_words_rc_cc(char **grid, int rc, int cc) {
 		return (NULL);
 	}
 
-	if (!(words = new_words_list(rc, cc))) {
+	if (!(words = get_g_words(rc, cc))) {
 		return (NULL);
 	}
 
@@ -401,7 +413,6 @@ int check_no_duplicated_words_rc_cc(char **grid, int rc, int cc) {
 		j = i + 1;
 		while (words[j]) {
 			if (!strcmp(words[i], words[j])) {
-				free_grid(&words);
 				return (j);
 			}
 			j++;
@@ -409,7 +420,6 @@ int check_no_duplicated_words_rc_cc(char **grid, int rc, int cc) {
 		i++;
 	}
 
-	free_grid(&words);
 	return (-1);
 }
 
@@ -430,12 +440,10 @@ int check_words_belong_to_dictionnary(char **grid, t_dict dict, int rc, int cc) 
 	i = -1;
 	while (words[++i]) {
 		if (search_word_hash(dict.d_hash, words[i]) < 0) {
-			free_grid(&words);
 			return (0);
 		}
 	}
 
-	free_grid(&words);
 	return (-1);
 }
 
@@ -455,12 +463,10 @@ int check_vertical_words_belong_to_dictionnary(char **grid, t_dict dict, int rc,
 	i = -1;
 	while (words[++i]) {
 		if (strcmp(words[i], "") && search_word_hash(dict.d_hash, words[i]) < 0) {
-			free_grid(&words);
 			return (0);
 		}
 	}
 
-	free_grid(&words);
 	return (-1);
 }
 
