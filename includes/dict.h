@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Fri Jan 10 01:39:13 2020                        by bmbarga      */
+/*   Updated: Sun Jan 12 14:16:50 2020                        by elhmn        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,13 @@
 # include "libft.h"
 
 # define INDEX_SIZE 26
-# define MIN_HASHTABLE_SIZE 1000
-# define MAX_HASHTABLE_SIZE 10000000
+# ifdef __EMSCRIPTEN__
+#  define MIN_HASHTABLE_SIZE 1000
+#  define MAX_HASHTABLE_SIZE 10000
+# else
+#  define MIN_HASHTABLE_SIZE 1000
+#  define MAX_HASHTABLE_SIZE 10000000
+# endif
 
 typedef struct s_cell {
 	char *cell;

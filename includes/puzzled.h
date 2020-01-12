@@ -6,7 +6,7 @@
 /*             <nleme@live.fr>                                                */
 /*                                                                            */
 /*   Created:                                                 by elhmn        */
-/*   Updated: Thu Jan 09 23:33:18 2020                        by bmbarga      */
+/*   Updated: Sun Jan 12 17:40:49 2020                        by elhmn        */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,22 @@
 
 #include "dict.h"
 
-#define DICTIONNARY "/usr/share/dict/words"
+
+// required for emscripten
+typedef struct s_brute {
+	int m;
+	int n;
+	t_dict dict;
+}			t_brute;
+
+
+
+# ifdef __EMSCRIPTEN__
+#  define DICTIONNARY "tests/dicts/wasm.dict"
+# else
+#  define DICTIONNARY "/usr/share/dict/words"
+# endif
+
 #define TESTDIR "./tests/"
 #define GENERATED_CW_FOLDER "./gen/"
 #define EMPTY '.'
@@ -25,11 +40,14 @@
 #define MAX(X, Y) ((X) > (Y) ? (X) : (Y))
 
 int				puzzled(int m, int n, char *file);
+int				emcc_puzzled(int m, int n, char *file);
 char			*getfile(char *dict_file);
 int				putfile(char *dict_file, char *str);
 int				test_puzzled(char *file);
 unsigned int	get_line_count(char *cword);
-char			**bruteforce(int m, int n, t_dict dict);
+
+void			emcc_bruteforce(void* vbr);
+void			bruteforce(int m, int n, t_dict dict);
 int				check_at_least_one_blank(char **grid);
 int				check_at_least_one_blank_rc_cc(char **grid, int rc, int cc);
 int				check_col_at_least_one_blank_rc_cc(char **grid, int rc, int cc);
